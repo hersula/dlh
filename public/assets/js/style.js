@@ -59,50 +59,6 @@ var Notify = (function() {
 
 	var $notifyBtn = $('[data-toggle="notify2"]');
 
-
-	// Methods
-	function notify(placement, align, icon, type, animIn, animOut,message) {
-		$.notify({
-			icon: icon,
-			title: ' Notifikasi',
-			message: message,
-			url: ''
-		}, {
-			element: 'body',
-			type: type,
-			allow_dismiss: true,
-			placement: {
-				from: placement,
-				align: align
-			},
-			offset: {
-				x: 15, // Keep this as default
-				y: 15 // Unless there'll be alignment issues as this value is targeted in CSS
-			},
-			spacing: 10,
-			z_index: 1080,
-			delay: 2500,
-			timer: 1000,
-			url_target: '_blank',
-			mouse_over: false,
-			animate: {
-				// enter: animIn,
-				// exit: animOut
-                enter: animIn,
-                exit: animOut
-			},
-			template: '<div data-notify="container" class="alert alert-dismissible alert-{0} alert-notify" role="alert">' +
-				'<span class="alert-icon" data-notify="icon"></span> ' +
-                '<div class="alert-text"</div> ' +
-				'<span class="alert-title" data-notify="title">{1}</span> ' +
-				'<span data-notify="message">{2}</span>' +
-                '</div>' +
-				
-                '<button type="button" class="close" data-notify="dismiss" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-				'</div>'
-		});
-	}
-
 	// Events
 
 	if ($notifyBtn.length) {
@@ -116,12 +72,54 @@ var Notify = (function() {
 			var animIn = $(this).attr('data-animation-in');
 			var animOut = $(this).attr('data-animation-out');
 			var message = $(this).attr('data-message');
-			notify(placement, align, icon, type, animIn, animOut,message);
+			notify(message, type, placement, align, icon, animIn, animOut);
 		})
 	}
 
 })();
 
+// Methods
+function notify(message, type = 'success', placement = 'top', align = 'right', title = 'Notifikasi',  icon = 'ni ni-bell-55', animIn = '', animOut = '') {
+	$.notify({
+		icon: icon,
+		title: title,
+		message: message,
+		url: ''
+	}, {
+		element: 'body',
+		type: type,
+		allow_dismiss: true,
+		placement: {
+			from: placement,
+			align: align
+		},
+		offset: {
+			x: 15, // Keep this as default
+			y: 15 // Unless there'll be alignment issues as this value is targeted in CSS
+		},
+		spacing: 10,
+		z_index: 1080,
+		delay: 2500,
+		timer: 5,
+		url_target: '_blank',
+		mouse_over: false,
+		animate: {
+			// enter: animIn,
+			// exit: animOut
+			enter: animIn,
+			exit: animOut
+		},
+		template: '<div data-notify="container" class="alert alert-dismissible alert-{0} alert-notify" role="alert">' +
+			'<span class="alert-icon" data-notify="icon"></span> ' +
+			'<div class="alert-text"</div> ' +
+			'<span class="alert-title" data-notify="title">{1}</span> ' +
+			'<span data-notify="message">{2}</span>' +
+			'</div>' +
+			
+			'<button type="button" class="close" data-notify="dismiss" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+			'</div>'
+	});
+}
 
 function convertDate(date){
 	var monthNames = [
