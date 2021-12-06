@@ -32,8 +32,7 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/admin/dashboard','admin\Dashboard::index');
-$routes->get('/user/dashboard','user\Dashboard::index');
+
 // Registration
 $routes->get('register', 'RegisterControllers::index', ['as' => 'register']);
 $routes->post('register', 'RegisterControllers::attemptRegister');
@@ -71,36 +70,42 @@ $routes->get('/data-harian', 'Data_harian::index');
 $routes->get('/get_data_harian', 'Data_harian::get_data_harian');
 $routes->post('/get_parameter_harian', 'Data_harian::get_parameter_harian');
 $routes->post('/add_data_harian', 'Data_harian::add_data_harian');
+$routes->post('/edit_data_harian', 'Data_harian::edit_data_harian');
 $routes->post('/get_datatable_data_harian', 'Data_harian::get_datatable_data_harian');
 $routes->get('/export_data_harian/(:any)', 'Data_harian::export_data_harian');
 
 // DATA INLET
 $routes->get('/analisa-inlet', 'Analisa_inlet::index');
 $routes->post('/add_data_inlet', 'Analisa_inlet::insert_inlet'); 
+$routes->post('/edit_data_inlet', 'Analisa_inlet::update_inlet'); 
 $routes->post('/get_datatable_data_inlet', 'Analisa_inlet::get_datatable_data_inlet');
 $routes->get('/export_data_inlet/(:any)', 'Analisa_inlet::export_data_inlet');
 
 // DATA OUTLET
 $routes->get('/analisa-outlet', 'Analisa_outlet::index');
 $routes->post('/add_data_outlet', 'Analisa_outlet::insert_outlet'); 
+$routes->post('/edit_data_outlet', 'Analisa_outlet::update_outlet'); 
 $routes->post('/get_datatable_data_outlet', 'Analisa_outlet::get_datatable_data_outlet');
 $routes->get('/export_data_outlet/(:any)', 'Analisa_outlet::export_data_outlet');
 
 // DATA OUTFALL
 $routes->get('/analisa-outfall', 'Analisa_outfall::index');
 $routes->post('/add_data_outfall', 'Analisa_outfall::insert_outfall'); 
+$routes->post('/edit_data_outfall', 'Analisa_outfall::update_outfall'); 
 $routes->post('/get_datatable_data_outfall', 'Analisa_outfall::get_datatable_data_outfall');
 $routes->get('/export_data_outfall/(:any)', 'Analisa_outfall::export_data_outfall');
 
 // DATA UPSTREAM
 $routes->get('/analisa-upstream', 'Analisa_upstream::index');
 $routes->post('/add_data_upstream', 'Analisa_upstream::insert_upstream'); 
+$routes->post('/edit_data_upstream', 'Analisa_upstream::update_upstream'); 
 $routes->post('/get_datatable_data_upstream', 'Analisa_upstream::get_datatable_data_upstream');
 $routes->get('/export_data_upstream/(:any)', 'Analisa_upstream::export_data_upstream');
 
 // DATA DOWNSTREAM
 $routes->get('/analisa-downstream', 'Analisa_downstream::index');
 $routes->post('/add_data_downstream', 'Analisa_downstream::insert_downstream'); 
+$routes->post('/edit_data_downstream', 'Analisa_downstream::update_downstream'); 
 $routes->post('/get_datatable_data_downstream', 'Analisa_downstream::get_datatable_data_downstream');
 $routes->get('/export_data_downstream/(:any)', 'Analisa_downstream::export_data_downstream');
 

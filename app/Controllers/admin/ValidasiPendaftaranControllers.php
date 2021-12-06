@@ -361,7 +361,7 @@ class ValidasiPendaftaranControllers extends BaseController
         $update_status = $this->SiteWWTP->_validasi_wwtp($id);
         if($update_status > 0){
             $loggerID = $this->Logger->where('siteWWTPID',$id)->findColumn('loggerID');
-            $detailLogger = $this->DetailLogger->_get_parameter($loggerID);
+            $detailLogger = $this->DetailLogger->_get_parameter($loggerID, 'BMAL', 1);
 
             // SETTING FIELDS TABLES
             $fields = [

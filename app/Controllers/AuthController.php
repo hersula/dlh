@@ -87,16 +87,16 @@ class AuthController extends BaseController
 			return redirect()->to(route_to('reset-password') .'?token='. $this->auth->user()->reset_hash)->withCookies();
 		}
 
-
         if(in_groups('development') || in_groups('superadmin') || in_groups('admin_dlh')){
             return redirect()->to('admin/dashboard');
         }
         else if(in_groups('admin_industry')) {
             return redirect()->to('user/dashboard');
         }
-	else if(in_groups('user_wwtp')){
-	    return redirect()->to('user/dashboard');
-	}
+
+        else if(in_groups('user_wwtp')) {
+            return redirect()->to('user/dashboard');
+        }
 
 		// $redirectURL = session('redirect_url') ?? site_url('/');
 		// unset($_SESSION['redirect_url']);

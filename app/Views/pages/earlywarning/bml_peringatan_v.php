@@ -52,43 +52,46 @@
                          </p>
                          <div class="d-none d-lg-flex d-xl-flex flex-row bd-highlight mb-3 table-responsive">
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                             <select class="form-control" name="districts_id" id="kecamatan">
                                      <option>Pilih Kecamatan</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                     <?php
+                                        if ($kecamatan) {
+                                            foreach ($kecamatan as $row) {
+                                        ?>
+                                             <option value="<?= $row["id"]; ?>"><?= $row["name"]; ?></option>
+                                     <?php
+                                            }
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                                 <select class="form-control" name="villages_id" id="desa">
                                      <option>Pilih Desa</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
-                                     <option>Pilih Industri</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                 <select class="form-control" name="company_id" id="company">
+                                     <option value="">Pilih Industri</option>
+                                     <?php
+                                        foreach ($company as $row) {
+                                        ?>
+                                         <option value="<?= $row["company_id"]; ?>"><?= $row["company_name"]; ?></option>
+                                     <?php
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
-                                     <option>Pilih Site</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                 <select class="form-control" name="export_site" id="site">
+                                     <option value="">Pilih Site</option>
+                                     <?php
+                                        foreach ($site as $row) {
+                                        ?>
+                                         <option value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
+                                     <?php
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight w-32">
@@ -314,6 +317,59 @@
      </div>
  </div>
  <script>
+
+$("#kecamatan").on('change', function() {
+         let kecamatanID = $(this).val();
+         let html;
+         if (kecamatanID == "") {
+             html = `<option value="">Pilih Desa</option>`;
+         } else {
+             html = `<option value="">Pilih Desa</option>`;
+             resetOption($("#desa"))
+             $.get(`<?= base_url('wilayah/desa_findById') ?>/${kecamatanID}`, function(data) {
+                 data = JSON.parse(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.id}">${value.name}</option>`
+                 });
+                 $("#desa").html(html)
+             });
+         }
+     });
+
+     function resetOption(option) {
+         option.html(`<option value="">Pilih ${option.attr('id').replace(/^\w/, (c) => c.toUpperCase())}</option>`)
+     }
+
+     $("#company").on('change', function() {
+         let company_id = $(this).find(":selected").val();
+         let html;
+         if (company_id == "") {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             <?php
+                foreach ($site as $row) {
+                ?>
+                 html += `<option value = "<?= $row["siteWWTPID"]; ?>" > <?= $row["name"]; ?> </option>`;
+             <?php
+                }
+                ?>
+
+             $("#site").html(html);
+         } else {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             resetOption($("#site"))
+             $.get(`<?= base_url('Data_harian/get_site') ?>/${company_id}`, function(data) {
+                 data = JSON.parse(data);
+                 console.log(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.siteWWTPID}">${value.name}</option>`;
+                 });
+
+                 $("#site").html(html);
+             });
+         }
+     });
+
+     
      // DATATABLE
 
      var DatatableBasic = (function() {

@@ -52,37 +52,38 @@
                         </p>
                         <div class="d-none d-lg-flex d-xl-flex flex-row bd-highlight mb-3 table-responsive">
                             <div class="p-2 bd-highlight  w-30">
-                                <select class="form-control" data-toggle="select">
+                                <select class="form-control" name="districts_id" id="kecamatan">
                                     <option>Pilih Kecamatan</option>
-                                    <option>Badges</option>
-                                    <option>Buttons</option>
-                                    <option>Cards</option>
-                                    <option>Forms</option>
-                                    <option>Modals</option>
+                                    <?php
+                                    if ($kecamatan) {
+                                        foreach ($kecamatan as $row) {
+                                    ?>
+                                            <option value="<?= $row["id"]; ?>"><?= $row["name"]; ?></option>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <div class="p-2 bd-highlight  w-30">
-                                <select class="form-control" data-toggle="select">
+                                <select class="form-control" name="villages_id" id="desa">
                                     <option>Pilih Desa</option>
-                                    <option>Badges</option>
-                                    <option>Buttons</option>
-                                    <option>Cards</option>
-                                    <option>Forms</option>
-                                    <option>Modals</option>
                                 </select>
                             </div>
                             <div class="p-2 bd-highlight  w-30">
-                                <select class="form-control" data-toggle="select">
-                                    <option>Pilih Industri</option>
-                                    <option>Badges</option>
-                                    <option>Buttons</option>
-                                    <option>Cards</option>
-                                    <option>Forms</option>
-                                    <option>Modals</option>
+                                <select class="form-control" name="company_id" id="company">
+                                    <option value="">Pilih Industri</option>
+                                    <?php
+                                    foreach ($company as $row) {
+                                    ?>
+                                        <option value="<?= $row["company_id"]; ?>"><?= $row["company_name"]; ?></option>
+                                    <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <div class="p-2 bd-highlight  w-30">
-                                <select class="form-control" name="export_site" data-toggle="select">
+                                <select class="form-control" name="export_site" id="site">
                                     <option value="">Pilih Site</option>
                                     <?php
                                     foreach ($site as $row) {
@@ -152,7 +153,7 @@
                     </div>
                     <div class="d-flex flex-row-reverse bd-highlight">
                         <div class="p-2 pr-4 bd-highlight">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahHarian">Tambah Laporan Harian</button>
+                            <button id="tambah-laporan" class="btn btn-primary">Tambah Laporan Harian</button>
                             <button class="btn btn-warning" id="btn-download">Download</button>
                         </div>
                     </div>
@@ -232,37 +233,21 @@
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
-                    <form method="POST" action="<?= base_url("add_data_harian"); ?>">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <select name="site" id="pilih-site" class="form-control">
-                                    <option data-siteWWTPID="" data-company_name="Nama Perusahaan" value="">Pilih Site WWTP</option>
-                                    <?php
-                                    foreach ($site as $row) {
-                                    ?>
-                                        <option data-siteWWTPID="<?= $row["siteWWTPID"]; ?>" data-company_name="<?= $row["company_name"]; ?>" value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
-                                    <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
+                    <form id="form-laporan" method="POST" action="">
                         <div>
                             <table class="table">
                                 <tr>
-                                    <td style="width:30px"><label for="nama_perusahaan" class="text-left">Nama Perusahaan </label></td>
-                                    <td><input type="text" class="form-control" placeholder="Nama Perusahaan" id="nama_perusahaan" name="nama_perusahaan" required readonly></td>
+                                    <td style="width:30px"><label class="text-left">Titik Penaatan</label></td>
+                                    <td>
+                                        <input type="hidden" name="site" id="pilih-site" value="" readonly />
+                                        <input type="text" name="site_name" value="" class="form-control" readonly />
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td style="width:30px"><label for="nama_perusahaan" class="text-left">Tambah Form Pelaporan </label></td>
-                                    <td><button class="btn btn-warning" type="button" id="add-form-pelaporan" data-toggle="notify2" data-placement="top" data-align="right" data-type="success" data-icon="ni ni-bell-55" data-message="Tambah form berhasil ditambahkan"><i class="ni ni-fat-add"></i></button></td>
-                                </tr>
-
                             </table>
                             <div id="content_form"></div>
                             <table class="table">
                                 <tr>
-                                    <td colspan="3"><button class="btn btn-primary float-right" type="submit">Submit</button></td>
+                                    <td colspan="3"><button id="btn-action" class="btn btn-primary float-right" type="submit">Submit</button></td>
                                 </tr>
                             </table>
                         </div>
@@ -276,20 +261,58 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
 <script>
-    // DATATABLE
-    $("select[name=export_site]").change(function() {
-        let site = $(this).find(":selected").val();
-
-        $("#datatable").DataTable().destroy();
-        $("#datatable tbody").empty();
-
-        if (site == "") {
-            alert("Pilih Site WWTP");
+    $("#kecamatan").on('change', function() {
+        let kecamatanID = $(this).val();
+        let html;
+        if (kecamatanID == "") {
+            html = `<option value="">Pilih Desa</option>`;
         } else {
-            get_columns(site);
+            html = `<option value="">Pilih Desa</option>`;
+            resetOption($("#desa"))
+            $.get(`<?= base_url('wilayah/desa_findById') ?>/${kecamatanID}`, function(data) {
+                data = JSON.parse(data);
+                $.each(data, function(key, value) {
+                    html += `<option value="${value.id}">${value.name}</option>`
+                });
+                $("#desa").html(html)
+            });
         }
     });
 
+    function resetOption(option) {
+        option.html(`<option value="">Pilih ${option.attr('id').replace(/^\w/, (c) => c.toUpperCase())}</option>`)
+    }
+
+    $("#company").on('change', function() {
+        let company_id = $(this).find(":selected").val();
+        let html;
+        if (company_id == "") {
+            html = `<option value="">Pilih Site Penaatan</option>`;
+            <?php
+            foreach ($site as $row) {
+            ?>
+                html +=`<option value = "<?= $row["siteWWTPID"]; ?>" > <?= $row["name"]; ?> </option>`;
+            <?php
+            }
+            ?>
+
+            $("#site").html(html);
+        } else {
+            html = `<option value="">Pilih Site Penaatan</option>`;
+            resetOption($("#site"))
+            $.get(`<?= base_url('Data_harian/get_site') ?>/${company_id}`, function(data) {
+                data = JSON.parse(data);
+                console.log(data);
+                $.each(data, function(key, value) {
+                    html += `<option value="${value.siteWWTPID}">${value.name}</option>`;
+                });
+
+                 $("#site").html(html);
+            });
+        }
+    });
+
+    // DATATABLE
     function myDataTables(site = "", cols = "") {
         let html;
         let columns = [{
@@ -300,7 +323,7 @@
                 }
             },
             {
-                data: "siteWWTPID",
+                data: "site_name",
                 render: $.fn.dataTable.render.text()
             },
             {
@@ -318,6 +341,16 @@
 
             j++;
         }
+
+        columns[j] = {
+            "render": function(data, type, row, meta) {
+                html = `<button class="btn btn-sm btn-info btn-view"  data-id="${row.siteWWTPID }" ><i class="far fa-eye"></i> Show </button> `
+
+                html += `<button class="btn btn-sm btn-warning btn-edit"  data-daily_dataID="${row.daily_dataID}" data-id="${row.siteWWTPID }"><i class="far fa-edit"></i> Edit </button> `
+
+                return html
+            }
+        };
 
         let table =
             $("#datatable").DataTable({
@@ -386,8 +419,10 @@
                 if (data) {
                     let html = "";
                     for (let i = 0; i < data.length; i++) {
-                        html += `<th class="target-remove-datatable">${data[i]}</th>`;
+                        html += `<th class="target-remove-datatable param">${data[i]}</th>`;
                     }
+
+                    html += `<th class="target-remove-datatable">Aksi</th>`;
 
                     $(".thead-datatable th.target-remove-datatable").remove();
                     $(".thead-datatable tr").append(html);
@@ -404,43 +439,50 @@
     // SWEETALERT UNTUK DOWNLOAD FILE
     $(function() {
         $("#btn-download").on('click', function() {
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger'
-                },
-                buttonsStyling: false
-            })
+            let siteWWTPID = $("select[name=export_site]").val();
 
-            swalWithBootstrapButtons.fire({
-                title: 'Apakah anda ingin export data ini?',
-                text: "Jika ya, mohon menunggu sebentar...",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Excel',
-                cancelButtonText: 'PDF',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    //Download Excel
-                    let site = $("select[name=export_site]").find(":selected").val();
-                    window.location.href = "<?= base_url("export_data_harian"); ?>/" + site;
-                    swalWithBootstrapButtons.fire(
-                        'Excel',
-                        'Data berhasil di download...',
-                        'success'
-                    )
-                } else if (
-                    /* Read more about handling dismissals below */
-                    result.dismiss === Swal.DismissReason.cancel
-                ) {
-                    swalWithBootstrapButtons.fire(
-                        'PDF',
-                        'Data berhasil di download...',
-                        'success'
-                    )
-                }
-            })
+            if (siteWWTPID != '') {
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Apakah anda ingin export data ini?',
+                    text: "Jika ya, mohon menunggu sebentar...",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Excel',
+                    cancelButtonText: 'PDF',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        //Download Excel
+                        let site = $("select[name=export_site]").find(":selected").val();
+                        window.location.href = "<?= base_url("export_data_harian"); ?>/" + site;
+                        swalWithBootstrapButtons.fire(
+                            'Excel',
+                            'Data berhasil di download...',
+                            'success'
+                        )
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'PDF',
+                            'Data berhasil di download...',
+                            'success'
+                        )
+                    }
+                });
+            }
+            else{
+                notify("Pilih Titik Penaatan Terlebih dahulu!", 'danger', 'top', 'center');
+            }
         })
     })
 
@@ -461,22 +503,12 @@
                 }
             });
         }
+
         let num = 0;
-        let parameter = "";
-
-        $("select[name=site]").change(function() {
-            let siteWWTPID = $(this).find(":selected").data("sitewwtpid");
-            let company_name = $(this).find(":selected").data("company_name");
-            $("input[name=nama_perusahaan]").val(company_name);
-
-            get_parameter_harian(siteWWTPID);
-
-            parameter = "";
-            $("#content_form").empty();
-        });
 
         // get titik penataan
         function get_parameter_harian(siteWWTPID) {
+
             let html = "";
             $.ajax({
                 url: "<?= base_url("get_parameter_harian") ?>",
@@ -486,37 +518,44 @@
                     "siteWWTPID": siteWWTPID,
                 },
                 success: function(data) {
-                    console.log(data);
+                    $("#content_form").empty();
+
+                    let content_form = $("#content_form");
+                    let html;
+                    html = create_form_pelaporan();
                     for (let i = 0; i < data.length; i++) {
-                        parameter += `
-                        <tr>
-                        <td style="width:30px"><label class="text-left">Nilai ${data[i]['parameter']}</label></td>
-                        <td><input type="text" class="form-control" name="${data[i]['parameter']}" required ></td>
-                        </tr>
-                        `;
+                        html += creat_parameter(data[i]['parameter'])
                     }
+
+                    html += `</table>`
+
+                    content_form.append(html)
+                    initDatepicker()
                 },
 
             });
         };
 
-        $("#add-form-pelaporan").on('click', function() {
-            let value = $("#pilih-site").find(":selected").val();
+        function creat_parameter(parameter, value = "") {
+            let html = `
+                        <tr>
+                        <td style="width:30px"><label class="text-left">Nilai ${parameter}</label></td>
+                        <td><input type="text" class="form-control" name="${parameter}" value="${value}" required ></td>
+                        </tr>
+                        `;
 
-            $("#content_form").empty();
+            return html;
+        }
 
-            if (value) {
-                let content_form = $("#content_form");
-                let html;
-                html = `<table class="table">`;
-                html += `<h3>FORM Laporan Harian</h3>`;
-                html += `
+        function create_form_pelaporan(tgl = "") {
+            let html = `<table class="table">`;
+            html += `
                         <tr>
                             <td style="width:30px"><label for="tanggal_pelaporan" class="text-left">Tanggal Pelaporan </label></td>
                                 <td>
                                     <div class="form-group">
                                         <div class='input-group date datetimepicker1' >
-                                            <input type='text' class="form-control" placeholder="Tanggal Pelaporan" name="tanggal_pelaporan" id="tanggal_pelaporan" />
+                                            <input type='text' class="form-control" placeholder="Tanggal Pelaporan" value="${tgl}" name="tanggal_pelaporan" id="tanggal_pelaporan" />
                                             <span class="input-group-addon input-group-append">
                                                 <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
                                             </span>
@@ -524,16 +563,115 @@
                                     </div>
                                 </td>
                         </tr>
-                        `
-                html += parameter;
+                        `;
 
-                html += `</table>`
+            return html;
+        }
 
-                content_form.append(html)
-                initDatepicker()
+        $("#tambah-laporan").click(function() {
+            let siteWWTPID = $("select[name=export_site]").val();
+
+            if (siteWWTPID != '') {
+                $("#form-laporan").attr('action', "<?= base_url("add_data_harian"); ?>");
+                $("#btn-action").text("Submit").show();
+                $('#content_form input').each(function(){$(this).val("")});
+                $("#modalTambahHarian").modal("show");
             } else {
-                alert("Pilih Titik Penaatan Terlebih dahulu!");
+                notify("Pilih Titik Penaatan Terlebih dahulu!", 'danger', 'top', 'center');
             }
-        })
+        });
+
+        $(document).on("click", ".btn-view", function() {
+            $("#btn-action").hide();
+            $("#content_form").empty();
+
+            let content_form = $("#content_form");
+            let selected = $(this).closest("tr");
+            let siteWWTPID = $(this).data("id");
+            let site_name = $(this).closest("tr").find("td:eq(1)").text();
+            let tgl = $(this).closest("tr").find("td:eq(2)").text();
+
+            $("select[name=site]").val(siteWWTPID);
+
+            let html;
+            html = create_form_pelaporan(tgl);
+            $("#datatable thead tr:eq(0)").find("th.param").each(function() {
+                html += creat_parameter($(this).text(), selected.find("td:eq(" + $(this).index() + ")").text());
+            });
+            html += `</table>`
+
+            content_form.append(html)
+            initDatepicker()
+
+            $("#modalTambahHarian").modal("show");
+        });
+
+        $(document).on("click", ".btn-edit", function() {
+            $("#btn-action").text("Update").show();
+            $("#form-laporan").attr('action', "<?= base_url("edit_data_harian"); ?>");
+            $("#content_form").empty();
+
+            let content_form = $("#content_form");
+            let selected = $(this).closest("tr");
+            let siteWWTPID = $(this).data("id");
+            let daily_dataID = $(this).data("daily_dataid");
+            let site_name = $(this).closest("tr").find("td:eq(1)").text();
+            let tgl = $(this).closest("tr").find("td:eq(2)").text();
+            console.log(daily_dataID);
+            $("select[name=site]").val(siteWWTPID);
+
+            let html = `<input type="hidden" name="daily_dataID" value="${daily_dataID}"`;
+            html += create_form_pelaporan(tgl);
+            $("#datatable thead tr:eq(0)").find("th.param").each(function() {
+                html += creat_parameter($(this).text(), selected.find("td:eq(" + $(this).index() + ")").text());
+            });
+            html += `</table>`
+
+            content_form.append(html)
+            initDatepicker()
+
+            $("#modalTambahHarian").modal("show");
+        });
+
+        // this is the id of the form
+        $("#form-laporan").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+            console.log(url);
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    notify(data.reason, data.status, 'top', 'center');
+                    $('#datatable').DataTable().ajax.reload();
+                    $("#modalTambahHarian").modal("hide");
+                }
+            });
+
+
+        });
+
+        $("select[name=export_site]").change(function() {
+            let site = $(this).find(":selected").val();
+            let name = $(this).find(":selected").text();
+            
+            $("#datatable").DataTable().destroy();
+            $("#datatable tbody").empty();
+
+            if (site == "") {
+                alert("Pilih Site WWTP");
+            } else {
+                $("input[name=site]").val(site);
+                $("input[name=site_name]").val(name);
+                get_parameter_harian(site);
+                get_columns(site);
+            }
+        });
+
     });
 </script>

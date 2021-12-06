@@ -1,10 +1,16 @@
 <?php
 
 namespace App\Controllers;
-use App\Models\SiteWwtpModel as Site;
+
 use App\Models\TypeReportModel as type_report;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Models\SiteWwtpModel as Site;
+use App\Models\LoggerModel as Logger;
+use App\Models\LoggerDetailModel as DetailLogger;
+use App\Models\CompanyModel as Company;
+use App\Models\KecamatanModel as Kecamatan;
+
 
 class Analisa_outfall extends BaseController
 {
@@ -13,54 +19,32 @@ class Analisa_outfall extends BaseController
     {
         $this->siteDB = new Site;
         $this->type_report = new type_report;
+        $this->Logger = new Logger;
+        $this->DetailLogger = new DetailLogger;
+        $this->companyDB = new Company;
+        $this->kecamatanDB = new Kecamatan;
     }
 
     public function index()
     {
         $data = [
-            'site'  => $this->siteDB->_find_all_site(),
-            'type_report'  => $this->type_report->findAll(),
-            'menu' => 'data analisa',
-            'submenu' => 'data outfall',
-            'content'   => 'pages/analisa/analisa-outfall_v'
+            'site'          => $this->siteDB->_find_all_site(),
+            'type_report'   => $this->type_report->findAll(),
+            'kecamatan'     => $this->kecamatanDB->_get_kecamatan(),
+            'company'       => $this->companyDB->_get_company(),
+            'menu'          => 'data analisa',
+            'submenu'       => 'data outfall',
+            'content'       => 'pages/analisa/analisa-outfall_v'
         ];
-        echo view('template/wrapper_v',$data);
-    }
 
-    public function insert_outfall()
-    {
-        $siteWWTPID = $this->request->getPost('site');
-        foreach($this->request->getPost('type_report') as $key=>$value){
-            $data[]= [
-                'outfall_id'      => generateHash(),
-                'siteWWTPID'        => $siteWWTPID,
-                'tgl_pelaporan'     => convertDateSQL(),
-                'tipe_pelaporan'     => $this->request->getPost('type_report')[$key],
-                'nama_laboratorium'  => $this->request->getPost('nama_lab')[$key],
-                'nomor_akreditasi_lab'  => $this->request->getPost('nomor_akreditasi_lab')[$key],
-                'nomor_sampling'  => $this->request->getPost('nomor_sampling')[$key],
-                'jenis_sampling'  => $this->request->getPost('jenis_sampling')[$key],
-                'tgl_start_sampling'  => convertDate($this->request->getPost('tanggal_start_sampling')[$key]),
-                'tgl_end_sampling'  => convertDate($this->request->getPost('tanggal_end_sampling')[$key]),
-                'tgl_pengambilan'  => convertDate($this->request->getPost('tanggal_pengambilan')[$key]),
-                'tgl_diterima'  => convertDate($this->request->getPost('tanggal_diterima')[$key]),
-                'titik_kordinat'  => $this->request->getPost('titik_kordinat')[$key],
-                'crt_at'  =>convertDateSQL() ,
-                'crt_by'  =>user_id() ,
-            ];
-        }
-
-        $db      = \Config\Database::connect();
-
-        $builder = $db->table('outfall_hd');
-        $builder->insertBatch($data);
-        // Success!
-        return redirect()->route('analisa-outfall')->with('message', 'Tambah Pelaporan outfall Berhasil');
+        echo view('template/wrapper_v', $data);
     }
 
     public function get_datatable_data_outfall()
     {
-        $siteWWTPID = "c29e1218bb78452b10b3a55b8759752d";
+        $siteWWTPID = $this->request->getPost('site');
+        $logger     = $this->Logger->_get_logger($siteWWTPID);
+        $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 0);
 
         $columns     = [
             'tipe_pelaporan',
@@ -71,6 +55,10 @@ class Analisa_outfall extends BaseController
             'nama_wwtp',
         ];
 
+        foreach ($detailLogger as $row) {
+            $columns[] = $row['parameter'];
+        }
+
         if ($this->request->isAJAX()) {
             $db = \Config\Database::connect();
 
@@ -78,20 +66,45 @@ class Analisa_outfall extends BaseController
             $orderBy    = $columns[$this->request->getPost('order[0][column]')];
             $skip       = $this->request->getPost('start');
             $limit      = $this->request->getPost('length');
-            $query      = $db->query("SELECT type_report.name as tipe_pelaporan,outfall_hd.tgl_pelaporan,outfall_hd.tgl_start_sampling,outfall_hd.tgl_end_sampling, company.company_name as nama_industri,site_wwtp.name as nama_wwtp FROM outfall_hd JOIN site_wwtp ON site_wwtp.siteWWTPID = outfall_hd.siteWWTPID JOIN company ON company.company_id = site_wwtp.companyID  JOIN type_report ON type_report.typeReportID = outfall_hd.tipe_pelaporan limit $skip, $limit");
+            $query      = $db->query("SELECT outfall_hd.*, type_report.name as tipe_pelaporan, company.company_name as nama_industri,
+                            site_wwtp.name as nama_wwtp FROM outfall_hd 
+                            JOIN site_wwtp 
+                            ON site_wwtp.siteWWTPID = outfall_hd.siteWWTPID 
+                            JOIN company 
+                            ON company.company_id = site_wwtp.companyID  
+                            JOIN type_report 
+                            ON type_report.typeReportID = outfall_hd.tipe_pelaporan 
+                            WHERE outfall_hd.siteWWTPID = '$siteWWTPID' 
+                            limit $skip, $limit");
             $rows       = $query->getResultArray();
 
+            $db->close();
+
+            $i = 0;
             foreach ($rows as $key => $value) {
-            
-                $data[] = [
-                   
-                    'tipe_pelaporan'  => $value['tipe_pelaporan'],
-                    'tgl_pelaporan'      => $value['tgl_pelaporan'],
-                    'tgl_start_sampling' => $value['tgl_start_sampling'],
-                    'tgl_end_sampling' => $value['tgl_end_sampling'],
-                    'nama_industri' => $value['nama_industri'],
-                    'nama_wwtp' => $value['nama_wwtp'],
+                $data[$i] = [
+                    'outfall_id'               => $value['outfall_id'],
+                    'site_name'              => $value['nama_wwtp'],
+                    'tgl_pelaporan'          => $value['tgl_pelaporan'],
+                    'tipe_pelaporan'         => $value['tipe_pelaporan'],
+                    'nama_lab'               => $value['nama_laboratorium'],
+                    'nomor_akreditasi_lab'   => $value['nomor_akreditasi_lab'],
+                    'nomor_sampling'         => $value['nomor_sampling'],
+                    'jenis_sampling'         => $value['jenis_sampling'],
+                    'tgl_start_sampling'     => $value['tgl_start_sampling'],
+                    'tgl_end_sampling'       => $value['tgl_end_sampling'],
+                    'tgl_pengambilan'        => $value['tgl_pengambilan'],
+                    'tgl_diterima'           => $value['tgl_diterima'],
+                    'titik_kordinat'         => $value['titik_kordinat'],
+                    'nama_industri'          => $value['nama_industri'],
+                    'nama_wwtp'              => $value['nama_wwtp'],
                 ];
+
+                foreach ($detailLogger as $row) {
+                    $data[$i][$row['parameter']] = $this->get_detail($value['outfall_id'], $row['parameter']);
+                }
+
+                $i++;
             }
 
             $query  = $db->query("SELECT count(*) as jml FROM outfall_hd");
@@ -103,65 +116,143 @@ class Analisa_outfall extends BaseController
                 'recordsFiltered'   => $count['jml'],
                 'data'              => $data,
             ]);
-            $db->close();
         }
+    }
+
+    public function get_detail($outfall_id, $parameter)
+    {
+        $val = 0;
+
+        $db = \Config\Database::connect();
+
+        $query = $db->query("select nilai from outfall_dt where outfall_id = '$outfall_id' and parameter = '$parameter'");
+        $row   = $query->getRowArray();
+        $val   = $row["nilai"];
+
+        return $val;
+    }
+
+    public function get_columns()
+    {
+        $siteWWTPID   = $this->request->getPost('siteWWTPID');
+        $logger       = $this->Logger->_get_logger($siteWWTPID);
+        $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 0);
+        $columns      = array();
+
+        foreach ($detailLogger as $row) {
+            $columns[]    = $row['parameter'];
+        }
+
+        echo json_encode($columns);
+    }
+
+    function get_parameter_outfall()
+    {
+        $siteWWTPID = $this->request->getPost('siteWWTPID');
+
+        $loggerID = $this->Logger->where('siteWWTPID', $siteWWTPID)->findColumn('loggerID');
+        $detailLogger = $this->DetailLogger->_get_parameter($loggerID, 'BMAL', 0);
+
+        echo json_encode($detailLogger);
     }
 
     public function export_data_outfall()
     {
+        
+        $db = \Config\Database::connect();
+
         $siteWWTPID = $this->request->uri->getSegment(2);
+        $logger     = $this->Logger->_get_logger($siteWWTPID);
+        $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 0);
+
+        $data       = array();
+        $query      = $db->query("SELECT t1.*, t2.company_name FROM site_wwtp as t1 inner join company as t2 on t1.companyID = t2.company_id where t1.siteWWTPID = '$siteWWTPID'");
+        $site       = $query->getRowArray();
+
         $spreadsheet   = new Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();
 
         // tulis dalam format .xlsx
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'Data Laporan outfall';
-        $sheet->setCellValue('A1', Date("M Y"));
+        $fileName = 'Data Laporan Outfall '.$site['name'].' '.Date("M Y");
+        $sheet->setCellValue('B1', 'Nama Titik Penaatan');
+        $sheet->setCellValue('C1', ': '.$site['name']);
+        $sheet->setCellValue('B2', "Tanggal Pelaporan");
+        $sheet->setCellValue('C2', ': '.Date("M Y"));
+        $sheet->setCellValue('B3', 'Alamat');
+        $sheet->setCellValue('C3', ': '.$site['address']);
+        $sheet->setCellValue('B4', 'Nama Perusahaan');
+        $sheet->setCellValue('C4', ': '.$site['company_name']);
+        $sheet->setCellValue('B5', 'ID');
+        $sheet->setCellValue('C5', ': '.$site['siteWWTPID']);
 
-        $i = 0; $col = 2;
-        $temp = array('E', 'F', 'G', 'H', 'I', 'J', 'K', 'L');
+        $i = 13; $col = 8;
+        $temp = range('A', 'Z');
 
-        $sheet->setCellValue('A'.$col, "No");
-        $sheet->setCellValue('B'.$col, "Nama Industri");
-        $sheet->setCellValue('C'.$col, "Nama Titik Penaatan");
-        $sheet->setCellValue('D'.$col, "Tipe Pelaporan");
-        $sheet->setCellValue('E'.$col, "Tanggal Pelaporan");
-        $sheet->setCellValue('F'.$col, "Nama Laboratorium");
-        $sheet->setCellValue('G'.$col, "Nomor Akreditasi Lab");
-        $sheet->setCellValue('H'.$col, "Nomor Sampling");
-        $sheet->setCellValue('I'.$col, "Jenis Sampling");
-        $sheet->setCellValue('J'.$col, "Tanggal Sampling");
-        $sheet->setCellValue('K'.$col, "Tanggal Pengambilan");
-        $sheet->setCellValue('L'.$col, "Tanggal Diterima");
-        $sheet->setCellValue('M'.$col, "Titik Koridinat");
-       
+        $sheet->setCellValue('A' . $col, "No");
+        $sheet->setCellValue('B' . $col, "Nama Industri");
+        $sheet->setCellValue('C' . $col, "Nama Titik Penaatan");
+        $sheet->setCellValue('D' . $col, "Tipe Pelaporan");
+        $sheet->setCellValue('E' . $col, "Tanggal Pelaporan");
+        $sheet->setCellValue('F' . $col, "Nama Laboratorium");
+        $sheet->setCellValue('G' . $col, "Nomor Akreditasi Lab");
+        $sheet->setCellValue('H' . $col, "Nomor Sampling");
+        $sheet->setCellValue('I' . $col, "Jenis Sampling");
+        $sheet->setCellValue('J' . $col, "Tanggal Sampling");
+        $sheet->setCellValue('K' . $col, "Tanggal Pengambilan");
+        $sheet->setCellValue('L' . $col, "Tanggal Diterima");
+        $sheet->setCellValue('M' . $col, "Titik Koridinat");
 
-        $db = \Config\Database::connect();
+        foreach ($detailLogger as $row) {
+            $sheet->setCellValue($temp[$i].$col, $row["parameter"]);
+            $i++;
+        }
 
         $data       = array();
-        $query      = $db->query("SELECT type_report.name as tipe_pelaporan,outfall_hd.tgl_pelaporan,outfall_hd.tgl_start_sampling,outfall_hd.tgl_end_sampling, company.company_name as nama_industri,site_wwtp.name as nama_wwtp,outfall_hd.nama_laboratorium,outfall_hd.nomor_akreditasi_lab,outfall_hd.nomor_sampling,outfall_hd.jenis_sampling,outfall_hd.tgl_pengambilan,outfall_hd.tgl_diterima,outfall_hd.titik_kordinat FROM outfall_hd JOIN site_wwtp ON site_wwtp.siteWWTPID = outfall_hd.siteWWTPID JOIN company ON company.company_id = site_wwtp.companyID  JOIN type_report ON type_report.typeReportID = outfall_hd.tipe_pelaporan WHERE outfall_hd.siteWWTPID = '$siteWWTPID' ");
+        $query      = $db->query("SELECT outfall_id, type_report.name as tipe_pelaporan,outfall_hd.tgl_pelaporan,outfall_hd.tgl_start_sampling,outfall_hd.tgl_end_sampling, company.company_name as nama_industri,site_wwtp.name as nama_wwtp,outfall_hd.nama_laboratorium,outfall_hd.nomor_akreditasi_lab,outfall_hd.nomor_sampling,outfall_hd.jenis_sampling,outfall_hd.tgl_pengambilan,outfall_hd.tgl_diterima,outfall_hd.titik_kordinat FROM outfall_hd JOIN site_wwtp ON site_wwtp.siteWWTPID = outfall_hd.siteWWTPID JOIN company ON company.company_id = site_wwtp.companyID  JOIN type_report ON type_report.typeReportID = outfall_hd.tipe_pelaporan WHERE outfall_hd.siteWWTPID = '$siteWWTPID' ");
 
         $data       = $query->getResultArray();
 
-        $i = 0; $no = 1; $col++;
-        $temp = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M');
-        foreach($data as $row){
-            $sheet->setCellValue($temp[$i].$col, $no); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['nama_industri']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['nama_wwtp']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['tipe_pelaporan']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['tgl_pelaporan']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['tgl_start_sampling'].'/'.$row['tgl_end_sampling']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['nama_laboratorium']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['nomor_akreditasi_lab']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['nomor_sampling']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['jenis_sampling']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['tgl_pengambilan']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['tgl_diterima']); $i++;
-            $sheet->setCellValue($temp[$i].$col, $row['titik_kordinat']); $i++;
+        $i = 0;
+        $no = 1;
+        $col++;
+        foreach ($data as $row) {
+            $sheet->setCellValue($temp[$i] . $col, $no);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['nama_industri']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['nama_wwtp']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['tipe_pelaporan']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['tgl_pelaporan']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['tgl_start_sampling'] . '/' . $row['tgl_end_sampling']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['nama_laboratorium']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['nomor_akreditasi_lab']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['nomor_sampling']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['jenis_sampling']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['tgl_pengambilan']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['tgl_diterima']);
+            $i++;
+            $sheet->setCellValue($temp[$i] . $col, $row['titik_kordinat']);
+            $i++;
+            
+            foreach ($detailLogger as $det) {
+                $sheet->setCellValue($temp[$i].$col, $this->get_detail($row['outfall_id'], $det['parameter']));
+                $i++;
+            }
 
-            $i = 0; $no++; $col++;
+            $i = 0;
+            $no++;
+            $col++;
         }
 
         // Redirect hasil generate xlsx ke web client
@@ -173,4 +264,141 @@ class Analisa_outfall extends BaseController
         $writer->save('php://output');
         die;
     }
+
+    public function insert_outfall()
+    {
+        $result           = array();
+        $result['status'] = 'danger';
+        $result['reason'] = "Data Tidak Boleh Kosong!";
+        
+        $siteWWTPID = $this->request->getPost('site');
+        $outfall_id   = generateHash();
+
+        $header = [
+            'outfall_id'              => $outfall_id,
+            'siteWWTPID'            => $siteWWTPID,
+            'tgl_pelaporan'         => convertDateSQL(),
+            'tipe_pelaporan'        => $this->request->getPost('type_report'),
+            'nama_laboratorium'     => $this->request->getPost('nama_lab'),
+            'nomor_akreditasi_lab'  => $this->request->getPost('nomor_akreditasi_lab'),
+            'nomor_sampling'        => $this->request->getPost('nomor_sampling'),
+            'jenis_sampling'        => $this->request->getPost('jenis_sampling'),
+            'tgl_start_sampling'    => convertDate($this->request->getPost('tanggal_start_sampling')),
+            'tgl_end_sampling'      => convertDate($this->request->getPost('tanggal_end_sampling')),
+            'tgl_pengambilan'       => convertDate($this->request->getPost('tanggal_pengambilan')),
+            'tgl_diterima'          => convertDate($this->request->getPost('tanggal_diterima')),
+            'titik_kordinat'        => $this->request->getPost('titik_kordinat'),
+            'crt_at'                => convertDateSQL(),
+            'crt_by'                => user_id(),
+        ];
+
+        $i              = 0;
+        $detail         = array();
+        foreach ($this->request->getPost('parameter') as $key => $value) {
+            $detail[] = [
+                'outfall_id'          => $outfall_id,
+                'outfall_dt_id'       => generateHash(),
+                'nilai'             => $this->request->getPost('parameter_val')[$key],
+                'parameter'         => $this->request->getPost('parameter')[$key],
+            ];
+            $i++;
+        }
+
+        $db      = \Config\Database::connect();
+        $status  = true;
+        $bagian  = "";
+
+        $builder = $db->table('outfall_hd');
+        if(!$builder->insert($header)){
+            $status = false;
+            $bagian = " Header ";
+        }
+
+        $builder = $db->table('outfall_dt');
+        if(!$builder->insertBatch($detail)){
+            $status = false;
+            $bagian = " Detail ";
+        }
+
+        if($status){
+            $result['status'] = 'success';
+            $result['reason'] = "Berhasil Menambah Data!";
+        }
+        else{
+            $result['status'] = 'danger';
+            $result['reason'] = "Gagal Menambah Data ($bagian)!";
+        }
+
+        
+        $result['header'] = $header;
+        $result['detail'] = $detail;
+
+        echo json_encode($result);
+    }
+
+    public function update_outfall()
+    {
+        $result           = array();
+        $result['status'] = 'danger';
+        $result['reason'] = "Data Tidak Boleh Kosong!";
+
+        $siteWWTPID    = $this->request->getPost('site');
+        $outfall_id   = $this->request->getPost('outfall_id');
+        $header = [
+            'outfall_id'              => $outfall_id,
+            'siteWWTPID'            => $siteWWTPID,
+            'tgl_pelaporan'         => convertDateSQL(),
+            'tipe_pelaporan'        => $this->request->getPost('type_report'),
+            'nama_laboratorium'     => $this->request->getPost('nama_lab'),
+            'nomor_akreditasi_lab'  => $this->request->getPost('nomor_akreditasi_lab'),
+            'nomor_sampling'        => $this->request->getPost('nomor_sampling'),
+            'jenis_sampling'        => $this->request->getPost('jenis_sampling'),
+            'tgl_start_sampling'    => convertDate($this->request->getPost('tgl_start_sampling')),
+            'tgl_end_sampling'      => convertDate($this->request->getPost('tgl_end_sampling')),
+            'tgl_pengambilan'       => convertDate($this->request->getPost('tgl_pengambilan')),
+            'tgl_diterima'          => convertDate($this->request->getPost('tgl_diterima')),
+            'titik_kordinat'        => $this->request->getPost('titik_kordinat'),
+            'crt_at'                => convertDateSQL(),
+            'crt_by'                => user_id(),
+        ];
+
+        $db      = \Config\Database::connect();
+        $status  = true;
+        $bagian = "";
+
+        $builder = $db->table('outfall_hd');
+        $builder->set($header);
+        $builder->where('outfall_id', $outfall_id);
+        if(!$builder->update()){
+            $status = false;
+            $bagian = " Header ";
+        }
+
+        $detail         = array();
+        foreach ($this->request->getPost('parameter') as $key => $value) {
+            $detail = [
+                'outfall_id'          => $outfall_id,
+                'nilai'             => $this->request->getPost('parameter_val')[$key],
+                'parameter'         => $this->request->getPost('parameter')[$key],
+            ];
+            $query = $db->query("UPDATE outfall_dt set nilai = '".$detail['nilai']."' WHERE parameter = '".$detail['parameter']."' and outfall_id = '".$detail['outfall_id']."'");
+            if(!$query){
+                $status = false;
+                $bagian = " Detail ";
+            }
+
+        }
+
+        if($status){
+            $result['status'] = 'success';
+            $result['reason'] = "Berhasil Merubah Data!";
+        }
+        else{
+            $result['status'] = 'danger';
+            $result['reason'] = "Gagal Merubah Data ($bagian)!";
+        }
+
+        echo json_encode($result);
+    }
+
 }

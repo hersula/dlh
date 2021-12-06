@@ -34,4 +34,19 @@ class CompanyModel extends Model
         'company_phone'                   => 'required',
         'type_industry'            => 'required',
     ];
+
+    function _get_company($where = ""){
+        $db      = \Config\Database::connect();
+    
+        $builder = $db->table('company');
+        $builder->select('*');
+
+        if($where != ''){
+            $builder->where($where);
+        }
+        
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+    }
 }

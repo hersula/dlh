@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use App\Models\SiteWwtpModel as Site;
 use App\Models\CompanyModel as Company;
+use App\Models\KecamatanModel as Kecamatan;
 use App\Models\LoggerModel as Logger;
 use App\Models\LoggerDetailModel as DetailLogger;
 
@@ -14,7 +15,8 @@ class Data_harian extends BaseController
     public function __construct()
     {
         $this->siteDB = new Site;
-        $this->companyDB = new COmpany;
+        $this->companyDB = new Company;
+        $this->kecamatanDB = new Kecamatan;
         $this->Logger = new Logger;
         $this->DetailLogger = new DetailLogger;
     }
@@ -22,19 +24,21 @@ class Data_harian extends BaseController
     public function index()
     {
         $data = [
-            'site'  => $this->siteDB->_find_all_site(),
-            'menu' => 'data masuk',
-            'submenu' => 'data harian',
+            'site'      => $this->siteDB->_find_all_site(),
+            'kecamatan' => $this->kecamatanDB->_get_kecamatan(),
+            'company'   => $this->companyDB->_get_company(),
+            'menu'      => 'data masuk',
+            'submenu'   => 'data harian',
             'content'   => 'pages/data_masuk/data-harian_v'
         ];
-
+        
         echo view('template/wrapper_v', $data);
     }
 
     public function get_datatable_data_harian()
     {
-        $siteWWTPID = $this->request->getPost('site');
-        $logger     = $this->Logger->_get_logger($siteWWTPID);
+        $siteWWTPID   = $this->request->getPost('site');
+        $logger       = $this->Logger->_get_logger($siteWWTPID);
         $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 1);
 
         $columns     = [
@@ -60,7 +64,9 @@ class Data_harian extends BaseController
             $i = 0;
             foreach ($rows as $key => $value) {
                 $data[$i] = [
-                    'siteWWTPID'    => $value['name'],
+                    'siteWWTPID'    => $siteWWTPID,
+                    'daily_dataID'  => $value['daily_dataID'],
+                    'site_name'     => $value['name'],
                     'tgl_pelaporan' => $value['tgl_pelaporan'],
                 ];
 
@@ -98,9 +104,15 @@ class Data_harian extends BaseController
 
     public function export_data_harian()
     {
+        $db = \Config\Database::connect();
+
         $siteWWTPID = $this->request->uri->getSegment(2);
         $logger     = $this->Logger->_get_logger($siteWWTPID);
         $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 1);
+
+        $data       = array();
+        $query      = $db->query("SELECT t1.*, t2.company_name FROM site_wwtp as t1 inner join company as t2 on t1.companyID = t2.company_id where t1.siteWWTPID = '$siteWWTPID'");
+        $site       = $query->getRowArray();
 
         $spreadsheet   = new Spreadsheet();
 
@@ -108,10 +120,19 @@ class Data_harian extends BaseController
 
         // tulis dalam format .xlsx
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'Data Laporan Harian';
-        $sheet->setCellValue('A1', Date("M Y"));
+        $fileName = 'Data Laporan Harian '.$site['name'].' '.Date("M Y");
+        $sheet->setCellValue('B1', 'Nama Titik Penaatan');
+        $sheet->setCellValue('C1', ': '.$site['name']);
+        $sheet->setCellValue('B2', "Tanggal Pelaporan");
+        $sheet->setCellValue('C2', ': '.Date("M Y"));
+        $sheet->setCellValue('B3', 'Alamat');
+        $sheet->setCellValue('C3', ': '.$site['address']);
+        $sheet->setCellValue('B4', 'Nama Perusahaan');
+        $sheet->setCellValue('C4', ': '.$site['company_name']);
+        $sheet->setCellValue('B5', 'ID');
+        $sheet->setCellValue('C5', ': '.$site['siteWWTPID']);
 
-        $i = 0; $col = 2;
+        $i = 0; $col = 8;
         $temp = array('E', 'F', 'G', 'H', 'I', 'J', 'K', 'L');
 
         $sheet->setCellValue('A'.$col, "No");
@@ -122,8 +143,6 @@ class Data_harian extends BaseController
             $sheet->setCellValue($temp[$i].$col, $row["parameter"]);
             $i++;
         }
-
-        $db = \Config\Database::connect();
 
         $data       = array();
         $query      = $db->query("SELECT * FROM daily_data_$siteWWTPID");
@@ -227,9 +246,13 @@ class Data_harian extends BaseController
 
     function add_data_harian()
     {
-        $siteWWTPID = $this->request->getPost('site');
-        $logger     = $this->Logger->_get_logger($siteWWTPID);
-        $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID']);
+        $result           = array();
+        $result['status'] = 'danger';
+        $result['reason'] = "Data Tidak Boleh Kosong!";
+
+        $siteWWTPID     = $this->request->getPost('site');
+        $logger         = $this->Logger->_get_logger($siteWWTPID);
+        $detailLogger   = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 1);
 
         $data = [
             'daily_dataID'      => generateHash(),
@@ -245,9 +268,61 @@ class Data_harian extends BaseController
         $db      = \Config\Database::connect();
 
         $builder = $db->table('daily_data_' . $siteWWTPID);
-        $builder->insert($data);
 
-        // Success!
-        return redirect()->route('data-harian')->with('message', 'Tambah Site WWTP Berhasil');
+        if($builder->insert($data)){
+            $result['status'] = 'success';
+            $result['reason'] = "Berhasil Menambah Data!";
+        }
+
+        echo json_encode($result);
+    }
+
+    function edit_data_harian()
+    {
+        $result           = array();
+        $result['status'] = 'danger';
+        $result['reason'] = "Data Tidak Boleh Kosong!";
+
+        $siteWWTPID   = $this->request->getPost('site');
+        $logger       = $this->Logger->_get_logger($siteWWTPID);
+        $detailLogger = $this->DetailLogger->_get_parameter($logger[0]['loggerID'], 'BMAL', 1);
+        $daily_dataID = $this->request->getPost('daily_dataID');
+
+        $data = [
+            'daily_dataID'      => $daily_dataID,
+            'loggerID'          => $logger[0]['loggerID'],
+            'typeReportID'      => $logger[0]['typeReportID'],
+            'tgl_pelaporan'     => $this->request->getPost('tanggal_pelaporan'),
+        ];
+
+        foreach ($detailLogger as $row) {
+            $data[$row["parameter"]] = $this->request->getPost($row["parameter"]);
+        }
+        
+        $db      = \Config\Database::connect();
+
+        $builder = $db->table('daily_data_' . $siteWWTPID);
+        $builder->set($data);
+        $builder->where('daily_dataID', $daily_dataID);
+        
+        if($builder->update()){
+            $result['status'] = 'success';
+            $result['reason'] = "Berhasil Merubah Data!";
+        }
+
+        echo json_encode($result);
+    }
+
+    function get_site($company_id)
+    {
+        $result  = array();
+
+        $db      = \Config\Database::connect();
+    
+        $builder = $db->table('site_wwtp');
+        $builder->select('*')->where("companyID", $company_id);
+        $result = $builder->get();
+
+        echo json_encode($result->getResultArray());
     }
 }

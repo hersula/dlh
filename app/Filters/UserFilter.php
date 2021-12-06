@@ -12,7 +12,7 @@ class UserFilter implements FilterInterface
     {
         // Do something here
         helper('auth');
-        if(!in_groups('admin_industry') && ! in_groups('user_wwtp') ){
+        if(!in_groups('admin_industry') && !in_groups('user_wwtp') ){
             return redirect('pagenotfoud');
         }
     }

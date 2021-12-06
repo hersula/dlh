@@ -39,4 +39,14 @@ class KecamatanModel extends Model
     protected $afterFind            = [];
     protected $beforeDelete         = [];
     protected $afterDelete          = [];
+
+    function _get_kecamatan($id = 3216){
+        $db      = \Config\Database::connect();
+    
+        $builder = $db->table('districts');
+        $builder->select('*')->where("regency_id", $id);
+        $query = $builder->get();
+    
+        return $query->getResultArray();
+    }
 }

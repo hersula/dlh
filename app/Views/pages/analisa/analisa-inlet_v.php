@@ -52,37 +52,38 @@
                          </p>
                          <div class="d-none d-lg-flex d-xl-flex flex-row bd-highlight mb-3 table-responsive">
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                                 <select class="form-control" name="districts_id" id="kecamatan">
                                      <option>Pilih Kecamatan</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                     <?php
+                                        if ($kecamatan) {
+                                            foreach ($kecamatan as $row) {
+                                        ?>
+                                             <option value="<?= $row["id"]; ?>"><?= $row["name"]; ?></option>
+                                     <?php
+                                            }
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                                 <select class="form-control" name="villages_id" id="desa">
                                      <option>Pilih Desa</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
-                                     <option>Pilih Industri</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                 <select class="form-control" name="company_id" id="company">
+                                     <option value="">Pilih Industri</option>
+                                     <?php
+                                        foreach ($company as $row) {
+                                        ?>
+                                         <option value="<?= $row["company_id"]; ?>"><?= $row["company_name"]; ?></option>
+                                     <?php
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" name="export_site" data-toggle="select">
+                                 <select class="form-control" name="export_site" id="site">
                                      <option value="">Pilih Site</option>
                                      <?php
                                         foreach ($site as $row) {
@@ -94,7 +95,7 @@
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight w-32">
-                                 <div class="form-control reportrange_q">
+                                 <div class="form-control reportrange">
                                      <span></span>
                                      <input type="hidden" name="start_date" id="start_date">
                                      <input type="hidden" name="end_date" id="end_date">
@@ -137,19 +138,8 @@
                                      <option>Modals</option>
                                  </select>
                              </div>
-                             <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" name="export_site" data-toggle="select">
-                                     <?php
-                                        foreach ($site as $row) {
-                                        ?>
-                                         <option value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
-                                     <?php
-                                        }
-                                        ?>
-                                 </select>
-                             </div>
                              <div class="col-lg-2 mt-3 pr-1 wrapper-daterange">
-                                 <div class="form-control reportrange_q">
+                                 <div class="form-control reportrange">
                                      <span></span>
                                      <input type="hidden" name="start_date" id="start_date">
                                      <input type="hidden" name="end_date" id="end_date">
@@ -163,7 +153,7 @@
                      </div>
                      <div class="d-flex flex-row-reverse bd-highlight">
                          <div class="p-2 pr-4 bd-highlight">
-                             <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahInlet">Tambah Laporan Inlet</button>
+                             <button id="tambah-laporan" class="btn btn-primary">Tambah Laporan Inlet</button>
                              <button class="btn btn-warning" id="btn-download">Download</button>
                          </div>
                      </div>
@@ -300,37 +290,24 @@
              </div>
              <div class="modal-body">
                  <div class="table-responsive">
-                     <form action="<?= base_url('add_data_inlet') ?>" method="POST">
-                         <div class="row">
-                             <div class="col-lg-12">
-                                 <select name="site" id="pilih-site" class="form-control">
-                                     <option data-siteWWTPID="" data-company_name="Nama Perusahaan" value="">Pilih Site WWTP</option>
-                                     <?php
-                                        foreach ($site as $row) {
-                                        ?>
-                                         <option data-siteWWTPID="<?= $row["siteWWTPID"]; ?>" data-company_name="<?= $row["company_name"]; ?>" value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
-                                     <?php
-                                        }
-                                        ?>
-                                 </select>
-                             </div>
+                     <form id="form-laporan" method="POST" action="">
+                         <div>
+                             <table class="table">
+                                 <tr>
+                                     <td style="width:30px"><label class="text-left">Titik Penaatan</label></td>
+                                     <td>
+                                         <input type="hidden" name="site" id="pilih-site" value="" readonly />
+                                         <input type="text" name="site_name" value="" class="form-control" readonly />
+                                     </td>
+                                 </tr>
+                             </table>
+                             <div id="content_form"></div>
+                             <table class="table">
+                                 <tr>
+                                     <td colspan="3"><button id="btn-action" class="btn btn-primary float-right" type="submit">Submit</button></td>
+                                 </tr>
+                             </table>
                          </div>
-                         <table class="table">
-                             <tr>
-                                 <td style="width:30px"><label for="nama_perusahaan" class="text-left">Nama Perusahaan </label></td>
-                                 <td><input type="text" class="form-control" placeholder="Nama Perusahaan" id="nama_perusahaan" name="nama_perusahaan" required readonly></td>
-                             </tr>
-                             <tr>
-                                 <td style="width:30px"><label for="nama_perusahaan" class="text-left">Tambah Form Pelaporan </label></td>
-                                 <td><button class="btn btn-warning" type="button" id="add-form-pelaporan" data-toggle="notify2" data-placement="top" data-align="right" data-type="success" data-icon="ni ni-bell-55" data-message="Tambah form berhasil ditambahkan"><i class="ni ni-fat-add"></i></button></td>
-                             </tr>
-                         </table>
-                         <div id="content_form"></div>
-                         <table class="table">
-                             <tr>
-                                 <td colspan="3"><button class="btn btn-primary float-right" type="submit">Submit</button></td>
-                             </tr>
-                         </table>
                      </form>
                  </div>
              </div>
@@ -338,48 +315,56 @@
      </div>
  </div>
  <script>
-     // DATATABLE
-     $("select[name=export_site]").change(function() {
-         let site = $(this).find(":selected").val();
-        
-         $("#datatable").DataTable().destroy();
-         $("#datatable tbody").empty();
-
-         if (site == "") {
-             alert("Pilih Site WWTP");
+     $("#kecamatan").on('change', function() {
+         let kecamatanID = $(this).val();
+         let html;
+         if (kecamatanID == "") {
+             html = `<option value="">Pilih Desa</option>`;
          } else {
-             get_columns(site);
+             html = `<option value="">Pilih Desa</option>`;
+             resetOption($("#desa"))
+             $.get(`<?= base_url('wilayah/desa_findById') ?>/${kecamatanID}`, function(data) {
+                 data = JSON.parse(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.id}">${value.name}</option>`
+                 });
+                 $("#desa").html(html)
+             });
          }
      });
 
-     function get_columns(site) {
-         let columns = false;
-
-         $.ajax({
-             url: "<?= base_url("Analisa_inlet/get_columns") ?>",
-             type: "POST",
-             dataType: "json",
-             data: {
-                 "siteWWTPID": site,
-             },
-             success: function(data) {
-                 if (data) {
-                     let html = "";
-                     for (let i = 0; i < data.length; i++) {
-                         html += `<th class="target-remove-datatable">${data[i]}</th>`;
-                     }
-
-                     $(".thead-datatable th.target-remove-datatable").remove();
-                     $(".thead-datatable tr").append(html);
-
-                     myDataTables(site, data);
-                 }
-             },
-
-         });
-
-         return columns;
+     function resetOption(option) {
+         option.html(`<option value="">Pilih ${option.attr('id').replace(/^\w/, (c) => c.toUpperCase())}</option>`)
      }
+
+     $("#company").on('change', function() {
+         let company_id = $(this).find(":selected").val();
+         let html;
+         if (company_id == "") {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             <?php
+                foreach ($site as $row) {
+                ?>
+                 html += `<option value = "<?= $row["siteWWTPID"]; ?>" > <?= $row["name"]; ?> </option>`;
+             <?php
+                }
+                ?>
+
+             $("#site").html(html);
+         } else {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             resetOption($("#site"))
+             $.get(`<?= base_url('Data_harian/get_site') ?>/${company_id}`, function(data) {
+                 data = JSON.parse(data);
+                 console.log(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.siteWWTPID}">${value.name}</option>`;
+                 });
+
+                 $("#site").html(html);
+             });
+         }
+     });
 
      function myDataTables(site = "", cols = "") {
          let html;
@@ -414,15 +399,49 @@
              },
          ];
 
-          let j = columns.length;
-          for (let i = 0; i < cols.length; i++) {
-              columns[j] = {
-                  data: cols[i],
-                  render: $.fn.dataTable.render.text()
-              };
+         let j = columns.length;
+         for (let i = 0; i < cols.length; i++) {
+             columns[j] = {
+                 data: cols[i],
+                 render: $.fn.dataTable.render.text()
+             };
 
-              j++;
-          }
+             j++;
+         }
+
+         columns[j] = {
+             "render": function(data, type, row, meta) {
+                 html = `<button class="btn btn-sm btn-info btn-view"  
+                        data-inlet_id="${row.inlet_id}" 
+                        data-nama_lab="${row.nama_lab}" 
+                        data-nomor_akreditasi_lab="${row.nomor_akreditasi_lab}" 
+                        data-nomor_sampling="${row.nomor_sampling}" 
+                        data-jenis_sampling="${row.jenis_sampling}" 
+                        data-tgl_start_sampling="${row.tgl_start_sampling}" 
+                        data-tgl_end_sampling="${row.tgl_end_sampling}" 
+                        data-tgl_pengambilan="${row.tgl_pengambilan}" 
+                        data-tgl_diterima="${row.tgl_diterima}" 
+                        data-titik_kordinat="${row.titik_kordinat}" 
+                        data-id="${row.siteWWTPID }" ><i class="far fa-eye"></i> Show </button> `
+
+                 html += `
+                        <button class="btn btn-sm btn-warning btn-edit"  
+                        data-inlet_id="${row.inlet_id}" 
+                        data-nama_lab="${row.nama_lab}" 
+                        data-nomor_akreditasi_lab="${row.nomor_akreditasi_lab}" 
+                        data-nomor_sampling="${row.nomor_sampling}" 
+                        data-jenis_sampling="${row.jenis_sampling}" 
+                        data-tgl_start_sampling="${row.tgl_start_sampling}" 
+                        data-tgl_end_sampling="${row.tgl_end_sampling}" 
+                        data-tgl_pengambilan="${row.tgl_pengambilan}" 
+                        data-tgl_diterima="${row.tgl_diterima}" 
+                        data-titik_kordinat="${row.titik_kordinat}" 
+                        data-id="${row.siteWWTPID }">
+                        <i class="far fa-edit"></i> Edit </button> `
+
+                 return html
+             }
+         };
 
          let table =
              $("#datatable").DataTable({
@@ -476,10 +495,40 @@
              });
 
      }
+
+     function get_columns(site) {
+         let columns = false;
+
+         $.ajax({
+             url: "<?= base_url("Analisa_inlet/get_columns") ?>",
+             type: "POST",
+             dataType: "json",
+             data: {
+                 "siteWWTPID": site,
+             },
+             success: function(data) {
+                 if (data) {
+                     let html = "";
+                     for (let i = 0; i < data.length; i++) {
+                         html += `<th class="target-remove-datatable param">${data[i]}</th>`;
+                     }
+
+                     html += `<th class="target-remove-datatable">Aksi</th>`;
+
+                     $(".thead-datatable th.target-remove-datatable").remove();
+                     $(".thead-datatable tr").append(html);
+
+                     myDataTables(site, data);
+                 }
+             },
+
+         });
+
+         return columns;
+     }
+
      // DATERANGE PICKER CONTROL
      $(function() {
-
-
          var start = moment().subtract(29, 'days');
          var end = moment();
 
@@ -504,51 +553,60 @@
          cb(start, end);
 
      });
+
      // END DATE RANGEPICKER
      // SWEETALERT UNTUK DOWNLOAD FILE
      $(function() {
-         $("#btn-download").on('click', function() {
-             const swalWithBootstrapButtons = Swal.mixin({
-                 customClass: {
-                     confirmButton: 'btn btn-success',
-                     cancelButton: 'btn btn-danger'
-                 },
-                 buttonsStyling: false
-             })
 
-             swalWithBootstrapButtons.fire({
-                 title: 'Apakah anda ingin export data ini?',
-                 text: "Jika ya, mohon menunggu sebentar...",
-                 icon: 'warning',
-                 showCancelButton: true,
-                 confirmButtonText: 'Excel',
-                 cancelButtonText: 'PDF',
-                 reverseButtons: true
-             }).then((result) => {
-                 if (result.isConfirmed) {
-                     //Download Excel
-                     let site = $("select[name=export_site]").find(":selected").val();
-                     window.location.href = "<?= base_url("export_data_inlet"); ?>/" + site;
-                     swalWithBootstrapButtons.fire(
-                         'Excel',
-                         'Data berhasil di download...',
-                         'success'
-                     )
-                 } else if (
-                     /* Read more about handling dismissals below */
-                     result.dismiss === Swal.DismissReason.cancel
-                 ) {
-                     swalWithBootstrapButtons.fire(
-                         'PDF',
-                         'Data berhasil di download...',
-                         'success'
-                     )
-                 }
-             })
+         $("#btn-download").on('click', function() {
+             let siteWWTPID = $("select[name=export_site]").val();
+
+             if (siteWWTPID != '') {
+                 const swalWithBootstrapButtons = Swal.mixin({
+                     customClass: {
+                         confirmButton: 'btn btn-success',
+                         cancelButton: 'btn btn-danger'
+                     },
+                     buttonsStyling: false
+                 })
+
+                 swalWithBootstrapButtons.fire({
+                     title: 'Apakah anda ingin export data ini?',
+                     text: "Jika ya, mohon menunggu sebentar...",
+                     icon: 'warning',
+                     showCancelButton: true,
+                     confirmButtonText: 'Excel',
+                     cancelButtonText: 'PDF',
+                     reverseButtons: true
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         //Download Excel
+                         let site = $("select[name=export_site]").find(":selected").val();
+                         window.location.href = "<?= base_url("export_data_inlet"); ?>/" + site;
+                         swalWithBootstrapButtons.fire(
+                             'Excel',
+                             'Data berhasil di download...',
+                             'success'
+                         )
+                     } else if (
+                         /* Read more about handling dismissals below */
+                         result.dismiss === Swal.DismissReason.cancel
+                     ) {
+                         swalWithBootstrapButtons.fire(
+                             'PDF',
+                             'Data berhasil di download...',
+                             'success'
+                         )
+                     }
+                 })
+             } else {
+                 notify("Pilih Titik Penaatan Terlebih dahulu!", 'danger', 'top', 'center');
+             }
          })
      })
 
      $(function() {
+
          function initDatepicker() {
              $('.datetimepicker1').datetimepicker({
                  format: 'YYYY-MM-DD HH:mm',
@@ -583,17 +641,6 @@
          let num = 0;
          let parameter = "";
 
-         $("select[name=site]").change(function() {
-             let siteWWTPID = $(this).find(":selected").data("sitewwtpid");
-             let company_name = $(this).find(":selected").data("company_name");
-             $("input[name=nama_perusahaan]").val(company_name);
-
-             get_parameter_inlet(siteWWTPID)
-
-             parameter = "";
-             $("#content_form").empty();
-         });
-
          // get titik penataan
          function get_parameter_inlet(siteWWTPID) {
              let html = "";
@@ -605,132 +652,258 @@
                      "siteWWTPID": siteWWTPID,
                  },
                  success: function(data) {
-                     console.log(data);
+                     $("#content_form").empty();
+
+                     let content_form = $("#content_form");
+                     let html;
+                     html = create_form_pelaporan();
                      for (let i = 0; i < data.length; i++) {
-                         parameter += `
-                        <tr>
-                        <td style="width:30px"><label class="text-left">Nilai ${data[i]['parameter']}</label></td>
-                        <td>
-                            <input type="text" class="form-control" name="parameter_val[]" required >
-                            <input type="hidden" name="parameter[]" value="${data[i]['parameter']}" />
-                        </td>
-                        </tr>
-                        `;
+                         html += creat_parameter(data[i]['parameter'])
                      }
+
+                     html += `</table>`
+
+                     content_form.append(html)
+                     initDatepicker()
                  },
 
              });
          };
 
-         $("#add-form-pelaporan").on('click', function() {
-             let value = $("#pilih-site").find(":selected").val();
+         function creat_parameter(parameter, value = "", id = "") {
+             let html = `
+                        <tr>
+                        <td style="width:30px"><label class="text-left">Nilai ${parameter}</label></td>
+                        <td>
+                        <input type="text" class="form-control" name="parameter_val[]" value="${value}" required >
+                        <input type="hidden" name="parameter[]" value="${parameter}" required >
+                        <input type="hidden" name="inlet_dt_id[]" value="${id}" required >
+                        </td>
+                        </tr>
+                        `;
 
+             return html;
+         }
+
+         function create_form_pelaporan(tgl, quartal = 'Semester', nama_lab = '', nomor_akreditasi_lab = '', nomor_sampling = '', jenis_sampling = '', tgl_start_sampling = '', tgl_end_sampling = '', tgl_pengambilan = '', tgl_diterima = '', titik_kordinat = '') {
+             let html = `<table class="table">`;
+             html += `
+                    <tr>
+                        <td style="width:30px"><label for="type_report" class="text-left">Quartal </label></td>
+                        <td>${quartal}<input type="hidden" class="form-control" placeholder="Type Report" id="type_report" name="type_report" value="2" required readonly ></td>
+                    </tr>
+                    <tr>
+                            <td style="width:30px"><label for="nama_lab" class="text-left">Nama Laboratorium</label></td>
+                            <td><input type="text" class="form-control" placeholder="Nama Laboratorium" id="nama_lab" name="nama_lab" value="${nama_lab}" required ></td>
+                    </tr>
+                    <tr>
+                            <td style="width:30px"><label for="nomor_akreditasi_lab" class="text-left">Nomer Akreditasi Lab</label></td>
+                            <td><input type="text" class="form-control" placeholder="Nomer Akreditasi Lab" id="nomor_akreditasi_lab" name="nomor_akreditasi_lab" value="${nomor_akreditasi_lab}" required ></td>
+                    </tr>
+
+                    <tr>
+                            <td style="width:30px"><label for="nomor_sampling" class="text-left">Nomer Sampling	</label></td>
+                            <td><input type="text" class="form-control" placeholder="Nomer Sampling	" id="nomor_sampling" name="nomor_sampling" value="${nomor_sampling}" required ></td>
+                    </tr>
+
+                    <tr>
+                            <td style="width:30px"><label for="jenis_sampling" class="text-left">Jenis Sampling	</label></td>
+                            <td><input type="text" class="form-control" placeholder="Jenis Sampling	" id="jenis_sampling" name="jenis_sampling" value="${jenis_sampling}" required ></td>
+                    </tr>
+                    <tr>
+                        <td style="width:30px"><label for="tgl_sampling" class="text-left">Tgl Sampling </label></td>
+                            <td>
+                                <div class="row">
+                                    <div class="form-group col-lg-6">
+                                        <div class='input-group date datetimepicker2' >
+                                            <input type='text' class="form-control" placeholder="Dari" name="tgl_start_sampling" value="${tgl_start_sampling}" id="tgl_sampling" />
+                                            <span class="input-group-addon input-group-append">
+                                                <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <div class='input-group date datetimepicker2' >
+                                            <input type='text' class="form-control" placeholder="Sampai" name="tgl_end_sampling" value="${tgl_end_sampling}" id="tgl_sampling" />
+                                            <span class="input-group-addon input-group-append">
+                                                <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td style="width:30px"><label for="tgl_pengambilan" class="text-left">Tgl Pengambilan </label></td>
+                            <td>
+                                <div class="form-group">
+                                    <div class='input-group date datetimepicker2' >
+                                        <input type='text' class="form-control" placeholder="Tgl Pengambilan" name="tgl_pengambilan" value="${tgl_pengambilan}" id="tgl_pengambilan" />
+                                        <span class="input-group-addon input-group-append">
+                                            <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td style="width:30px"><label for="tgl_diterima" class="text-left">Tgl Diterima </label></td>
+                            <td>
+                                <div class="form-group">
+                                    <div class='input-group date datetimepicker2' >
+                                        <input type='text' class="form-control" placeholder="Tgl Diterima" name="tgl_diterima" value="${tgl_diterima}" id="tgl_diterima" />
+                                        <span class="input-group-addon input-group-append">
+                                            <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                    </tr>
+                    <tr>
+                            <td style="width:30px"><label for="titik_kordinat" class="text-left">Titik Kordinat	</label></td>
+                            <td><input type="text" class="form-control" placeholder="Titik Kordinat	" id="titik_kordinat" name="titik_kordinat" value="${titik_kordinat}" required ></td>
+                    </tr>
+                `;
+
+             return html;
+         }
+
+         $("#tambah-laporan").click(function() {
+             let siteWWTPID = $("select[name=export_site]").val();
+
+             if (siteWWTPID != '') {
+                 $("#form-laporan").attr('action', "<?= base_url("add_data_inlet"); ?>");
+                 $("#btn-action").text("Submit").show();
+                 $('#content_form input[type=text]').each(function() {
+                     $(this).val("")
+                 });
+
+                 $("#modalTambahInlet").modal("show");
+             } else {
+                 notify("Pilih Titik Penaatan Terlebih dahulu!", 'danger', 'top', 'center');
+             }
+         });
+
+         $(document).on("click", ".btn-view", function() {
+             $("#btn-action").hide();
              $("#content_form").empty();
 
-             if (value) {
-                 let content_form = $("#content_form");
-                 let html;
-                 html = `<table class="table">`;
-                 html += `<h3>FORM Pendaftaran Laporan Inlet</h3>`;
-                 html += `
-                        <tr>
-                            <td style="width:30px"><label for="type_report" class="text-left">Quartal </label></td>
-                            <td>
-                                <select  class="form-control" id="type_report" name="type_report" required >
-                                    <option>Pilih Tipe Pelaporan</option>
-                                    <?php
-                                    foreach ($type_report as $type) :
-                                    ?>
-                                    <option value="<?= $type['typeReportID'] ?>"><?= $type['name'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                        </tr>
-                    
-                        <tr>
-                                <td style="width:30px"><label for="nama_lab" class="text-left">Nama Laboratorium</label></td>
-                                <td><input type="text" class="form-control" placeholder="Nama Laboratorium" id="nama_lab" name="nama_lab" required ></td>
-                        </tr>
-                        <tr>
-                                <td style="width:30px"><label for="nomor_akreditasi_lab" class="text-left">Nomer Akreditasi Lab</label></td>
-                                <td><input type="text" class="form-control" placeholder="Nomer Akreditasi Lab" id="nomor_akreditasi_lab" name="nomor_akreditasi_lab" required ></td>
-                        </tr>
+             let content_form = $("#content_form");
+             let selected = $(this).closest("tr");
+             let siteWWTPID = $(this).data("id");
+             let site_name = $(this).closest("tr").find("td:eq(1)").text();
+             let tgl = $(this).closest("tr").find("td:eq(2)").text();
+             let quartal = $(this).closest("tr").find("td:eq(1)").text();
+             let nama_lab = $(this).data("nama_lab");
+             let nomor_akreditasi_lab = $(this).data("nomor_akreditasi_lab");
+             let nomor_sampling = $(this).data("nomor_sampling");
+             let jenis_sampling = $(this).data("jenis_sampling");
+             let tgl_start_sampling = $(this).data("tgl_start_sampling");
+             let tgl_end_sampling = $(this).data("tgl_end_sampling");
+             let tgl_pengambilan = $(this).data("tgl_pengambilan");
+             let tgl_diterima = $(this).data("tgl_diterima");
+             let titik_kordinat = $(this).data("titik_kordinat");
 
-                        <tr>
-                                <td style="width:30px"><label for="nomor_sampling" class="text-left">Nomer Sampling	</label></td>
-                                <td><input type="text" class="form-control" placeholder="Nomer Sampling	" id="nomor_sampling" name="nomor_sampling" required ></td>
-                        </tr>
+             $("select[name=site]").val(siteWWTPID);
 
-                        <tr>
-                                <td style="width:30px"><label for="jenis_sampling" class="text-left">Jenis Sampling	</label></td>
-                                <td><input type="text" class="form-control" placeholder="Jenis Sampling	" id="jenis_sampling" name="jenis_sampling" required ></td>
-                        </tr>
+             let html;
+             html = create_form_pelaporan(tgl, quartal, nama_lab, nomor_akreditasi_lab, nomor_sampling, jenis_sampling, tgl_start_sampling, tgl_end_sampling, tgl_pengambilan, tgl_diterima, titik_kordinat);
+             $("#datatable thead tr:eq(0)").find("th.param").each(function() {
+                 html += creat_parameter($(this).text(), selected.find("td:eq(" + $(this).index() + ")").text());
+             });
+             html += `</table>`
 
-                        <tr>
-                            <td style="width:30px"><label for="tanggal_sampling" class="text-left">Tanggal Sampling </label></td>
-                                <td>
-                                    <div class="row">
-                                        <div class="form-group col-lg-6">
-                                            <div class='input-group date datetimepicker2' >
-                                                <input type='text' class="form-control" placeholder="Dari" name="tanggal_start_sampling" id="tanggal_sampling" />
-                                                <span class="input-group-addon input-group-append">
-                                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-lg-6">
-                                            <div class='input-group date datetimepicker2' >
-                                                <input type='text' class="form-control" placeholder="Sampai" name="tanggal_end_sampling" id="tanggal_sampling" />
-                                                <span class="input-group-addon input-group-append">
-                                                    <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                        </tr>
-                        <tr>
-                            <td style="width:30px"><label for="tanggal_pengambilan" class="text-left">Tanggal Pengambilan </label></td>
-                                <td>
-                                    <div class="form-group">
-                                        <div class='input-group date datetimepicker2' >
-                                            <input type='text' class="form-control" placeholder="Tanggal Pengambilan" name="tanggal_pengambilan" id="tanggal_pengambilan" />
-                                            <span class="input-group-addon input-group-append">
-                                                <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                        </tr>
-                        <tr>
-                            <td style="width:30px"><label for="tanggal_diterima" class="text-left">Tanggal Diterima </label></td>
-                                <td>
-                                    <div class="form-group">
-                                        <div class='input-group date datetimepicker2' >
-                                            <input type='text' class="form-control" placeholder="Tanggal Diterima" name="tanggal_diterima" id="tanggal_diterima" />
-                                            <span class="input-group-addon input-group-append">
-                                                <button class="btn btn-outline-primary" type="button" id="button-addon2"> <span class="fa fa-calendar"></span></button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </td>
-                        </tr>
+             content_form.append(html)
+             initDatepicker()
 
-                        <tr>
-                                <td style="width:30px"><label for="titik_kordinat" class="text-left">Titik Kordinat	</label></td>
-                                <td><input type="text" class="form-control" placeholder="Titik Kordinat	" id="titik_kordinat" name="titik_kordinat" required ></td>
-                        </tr>
-                        
-                        `
-                 html += parameter;
+             $("#modalTambahInlet").modal("show");
+         });
 
-                 html += `</table>`
+         $(document).on("click", ".btn-edit", function() {
+             $("#btn-action").text("Update").show();
+             $("#form-laporan").attr('action', "<?= base_url("edit_data_inlet"); ?>");
+             $("#content_form").empty();
 
-                 content_form.append(html)
-                 initDatepicker();
+             let content_form = $("#content_form");
+             let selected = $(this).closest("tr");
+             let siteWWTPID = $(this).data("id");
+             let inlet_id = $(this).data("inlet_id");
+             let site_name = $(this).closest("tr").find("td:eq(1)").text();
+             let tgl = $(this).closest("tr").find("td:eq(2)").text();
+             let quartal = $(this).closest("tr").find("td:eq(1)").text();
+             let nama_lab = $(this).data("nama_lab");
+             let nomor_akreditasi_lab = $(this).data("nomor_akreditasi_lab");
+             let nomor_sampling = $(this).data("nomor_sampling");
+             let jenis_sampling = $(this).data("jenis_sampling");
+             let tgl_start_sampling = $(this).data("tgl_start_sampling");
+             let tgl_end_sampling = $(this).data("tgl_end_sampling");
+             let tgl_pengambilan = $(this).data("tgl_pengambilan");
+             let tgl_diterima = $(this).data("tgl_diterima");
+             let titik_kordinat = $(this).data("titik_kordinat");
+
+             $("select[name=site]").val(siteWWTPID);
+
+             let html;
+             html = create_form_pelaporan(tgl, quartal, nama_lab, nomor_akreditasi_lab, nomor_sampling, jenis_sampling, tgl_start_sampling, tgl_end_sampling, tgl_pengambilan, tgl_diterima, titik_kordinat, inlet_id);
+             $("#datatable thead tr:eq(0)").find("th.param").each(function() {
+                 html += creat_parameter($(this).text(), selected.find("td:eq(" + $(this).index() + ")").text());
+             });
+             html += `</table> <div><input type="hidden" name="inlet_id" value="${inlet_id}"/></div>`;
+
+             content_form.append(html);
+             initDatepicker()
+
+             $("#modalTambahInlet").modal("show");
+         });
+
+         // this is the id of the form
+         $("#form-laporan").submit(function(e) {
+
+             e.preventDefault(); // avoid to execute the actual submit of the form.
+
+             var form = $(this);
+             var url = form.attr('action');
+             console.log(url);
+             $.ajax({
+                 type: "POST",
+                 url: url,
+                 dataType: "json",
+                 data: form.serialize(), // serializes the form's elements.
+                 success: function(data) {
+                     console.log(data);
+                     notify(data.reason, data.status, 'top', 'center');
+                     $('#datatable').DataTable().ajax.reload();
+                     $("#modalTambahInlet").modal("hide");
+                 }
+             });
+         });
+
+         $("select[name=site]").change(function() {
+             let siteWWTPID = $(this).find(":selected").data("sitewwtpid");
+             let company_name = $(this).find(":selected").data("company_name");
+             $("input[name=nama_perusahaan]").val(company_name);
+
+             get_parameter_inlet(siteWWTPID)
+
+             parameter = "";
+             $("#content_form").empty();
+         });
+
+         $("select[name=export_site]").change(function() {
+             let site = $(this).find(":selected").val();
+             let name = $(this).find(":selected").text();
+
+             $("#datatable").DataTable().destroy();
+             $("#datatable tbody").empty();
+
+             if (site == "") {
+                 alert("Pilih Site WWTP");
              } else {
-                 alert("Pilih Titik Penaatan Terlebih dahulu!");
+                 $("input[name=site]").val(site);
+                 $("input[name=site_name]").val(name);
+                 get_parameter_inlet(site);
+                 get_columns(site);
              }
-         })
+         });
      });
  </script>

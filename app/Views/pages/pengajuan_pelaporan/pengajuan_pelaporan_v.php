@@ -52,43 +52,46 @@
                          </p>
                          <div class="d-none d-lg-flex d-xl-flex flex-row bd-highlight mb-3 table-responsive">
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                             <select class="form-control" name="districts_id" id="kecamatan">
                                      <option>Pilih Kecamatan</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                                     <?php
+                                        if ($kecamatan) {
+                                            foreach ($kecamatan as $row) {
+                                        ?>
+                                             <option value="<?= $row["id"]; ?>"><?= $row["name"]; ?></option>
+                                     <?php
+                                            }
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
+                                <select class="form-control" name="villages_id" id="desa">
                                      <option>Pilih Desa</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
-                                     <option>Pilih Industri</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                             <select class="form-control" name="company_id" id="company">
+                                     <option value="">Pilih Industri</option>
+                                     <?php
+                                        foreach ($company as $row) {
+                                        ?>
+                                         <option value="<?= $row["company_id"]; ?>"><?= $row["company_name"]; ?></option>
+                                     <?php
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight  w-30">
-                                 <select class="form-control" data-toggle="select">
-                                     <option>Pilih Site</option>
-                                     <option>Badges</option>
-                                     <option>Buttons</option>
-                                     <option>Cards</option>
-                                     <option>Forms</option>
-                                     <option>Modals</option>
+                             <select class="form-control" name="export_site" id="site">
+                                     <option value="">Pilih Site</option>
+                                     <?php
+                                        foreach ($site as $row) {
+                                        ?>
+                                         <option value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
+                                     <?php
+                                        }
+                                        ?>
                                  </select>
                              </div>
                              <div class="p-2 bd-highlight w-32">
@@ -165,7 +168,7 @@
                          </div>
                      </div>
                      <div class="table-responsive py-4">
-                         <table class="table table-flush" id="datatable-data-harian">
+                         <table class="table table-flush" id="datatable">
                              <thead class="thead-light">
                                  <tr>
                                      <th>No</th>
@@ -178,7 +181,7 @@
                                  </tr>
                              </thead>
                              <tbody>
-                                 <tr>
+                                 <!-- <tr>
                                      <td>1</td>
                                      <td>Q1</td>
                                      <td>2011/03/31 23:59</td>
@@ -195,7 +198,7 @@
                                      <td>PT INDUSTRI A (WWTP-02)</td>
                                      <td><label class="badge badge-warning">Menunggu Validasi</label></td>
                                      <td><button class="btn btn-primary" disabled>Cetak Lembar LTE</button></td>
-                                 </tr>
+                                 </tr> -->
                              </tbody>
                          </table>
                      </div>
@@ -389,228 +392,174 @@
  </div>
  
  <script>
-     // DATATABLE
 
-     var DatatableBasic = (function() {
+$("#kecamatan").on('change', function() {
+         let kecamatanID = $(this).val();
+         let html;
+         if (kecamatanID == "") {
+             html = `<option value="">Pilih Desa</option>`;
+         } else {
+             html = `<option value="">Pilih Desa</option>`;
+             resetOption($("#desa"))
+             $.get(`<?= base_url('wilayah/desa_findById') ?>/${kecamatanID}`, function(data) {
+                 data = JSON.parse(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.id}">${value.name}</option>`
+                 });
+                 $("#desa").html(html)
+             });
+         }
+     });
 
-         // Variables
+     function resetOption(option) {
+         option.html(`<option value="">Pilih ${option.attr('id').replace(/^\w/, (c) => c.toUpperCase())}</option>`)
+     }
 
-         var $dtBasic = $('#datatable-data-harian');
+     $("#company").on('change', function() {
+         let company_id = $(this).find(":selected").val();
+         let html;
+         if (company_id == "") {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             <?php
+                foreach ($site as $row) {
+                ?>
+                 html += `<option value = "<?= $row["siteWWTPID"]; ?>" > <?= $row["name"]; ?> </option>`;
+             <?php
+                }
+                ?>
 
+             $("#site").html(html);
+         } else {
+             html = `<option value="">Pilih Site Penaatan</option>`;
+             resetOption($("#site"))
+             $.get(`<?= base_url('Data_harian/get_site') ?>/${company_id}`, function(data) {
+                 data = JSON.parse(data);
+                 console.log(data);
+                 $.each(data, function(key, value) {
+                     html += `<option value="${value.siteWWTPID}">${value.name}</option>`;
+                 });
 
-         // Methods
+                 $("#site").html(html);
+             });
+         }
+     });
 
-         function init($this) {
-
-             // Basic options. For more options check out the Datatables Docs:
-             // https://datatables.net/manual/options
-
-             var options = {
-                 keys: !0,
-                 select: {
-                     style: "multi"
-                 },
+     function myDataTable(){
+         let html;
+         let table =
+             $("#datatable").DataTable({
                  language: {
                      paginate: {
                          previous: "<i class='fas fa-angle-left'>",
                          next: "<i class='fas fa-angle-right'>"
                      }
                  },
-             };
+                 "columnDefs": [{
+                         "orderable": false,
+                         "targets": [0, 4]
+                     },
+                     {
+                         "orderable": true,
+                         "targets": [1, 2, 3]
+                     }
+                 ],
+                 "pageLength": 5,
+                 "lengthMenu": [
+                     [5, 10, 25, 50, 100],
+                     [5, 10, 25, 50, 100]
+                 ],
+                 "bLengthChange": true,
+                 "bFilter": true,
+                 "bInfo": true,
+                 "processing": true,
+                 "bServerSide": true,
+                 "order": [
+                     [1, "asc"]
+                 ],
+                 "ajax": {
+                     url: "<?= base_url('Pengajuan_pelaporan/getDataTable') ?>",
+                     type: "POST",
+                     data: function(d) {
+                         //  d._token = "{{csrf_token()}}"
+                     },
 
-             // Init the datatable
-
-             var table = $this.on('init.dt', function() {
-                 $('div.dataTables_length select').removeClass('custom-select custom-select-sm');
-
-             }).DataTable(options);
-         }
-
-
-         // Events
-
-         if ($dtBasic.length) {
-             init($dtBasic);
-         }
-
-     })();
-
-     // DATERANGE PICKER CONTROL
-     $(function() {
-
-
-         var start = moment().subtract(29, 'days');
-         var end = moment();
-
-         function cb(start, end) {
-             $('.reportrange_q span').html(start.format('DD/MM/YYYY h:mm') + ' - ' + end.format('DD/MM/YYYY h:mm'));
-             $(".reportrange_q #start_date").val(start.format('DD/MM/YYYY h:mm'))
-             $(".reportrange_q #end_date").val(end.format('DD/MM/YYYY h:mm'))
-         }
-
-         $('.reportrange_q').daterangepicker({
-             startDate: start,
-             endDate: end,
-             timePicker: true,
-             ranges: {
-                 'Q1': [moment('2021-01-01T00:00:00.000').startOf('month'), moment('2021-03-01T00:00:00.000').endOf('month')],
-                 'Q2': [moment('2021-04-01T00:00:00.000').startOf('month'), moment('2021-06-01T00:00:00.000').endOf('month')],
-                 'Q3': [moment('2021-07-01T00:00:00.000').startOf('month'), moment('2021-09-01T00:00:00.000').endOf('month')],
-                 'Q4': [moment('2021-10-01T00:00:00.000').startOf('month'), moment('2021-12-01T00:00:00.000').endOf('month')],
-             }
-         }, cb);
-
-         cb(start, end);
-
-     });
-     // END DATE RANGEPICKER
-     // SWEETALERT UNTUK DOWNLOAD FILE
-     $(function() {
-         $("#btn-download").on('click', function() {
-             const swalWithBootstrapButtons = Swal.mixin({
-                 customClass: {
-                     confirmButton: 'btn btn-success',
-                     cancelButton: 'btn btn-danger'
                  },
-                 buttonsStyling: false
+                 columns: [{
+                         data: null,
+                         "sortable": false,
+                         render: function(data, type, row, meta) {
+                             return meta.row + meta.settings._iDisplayStart + 1;
+                         }
+                     },
+                     {
+                         data: "company_name",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "company_address",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "company_phone",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "email",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "name",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "position",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         data: "crt_at",
+                         render: $.fn.dataTable.render.text()
+                     },
+                     {
+                         "render": function(data, type, row, meta) {
+                             return html = `<div class='badge badge-${row.badge}'>${row.status}</div>`
+                         }
+                     },
+                     {
+                         "render": function(data, type, row, meta) {
+                             html = `<button class="btn btn-sm btn-info btn-view"  data-id="${row.registration_id }" ><i class="far fa-eye"></i> Show </button> `
+
+                             html += `<button class="btn btn-sm btn-warning btn-edit"  data-id="${row.registration_id }"><i class="far fa-edit"></i> Edit </button> `
+
+                             html += `<button href="" class="btn btn-sm btn-danger btn-delete"  id="btn-delete" data-id="${row.registration_id}"<i class="far fa-trash-alt"></i> Deactivated</button>`
+
+                             if (row.status == "Open") {
+                                 html += `<button href="" class="btn btn-sm btn-success btn-konfirmasi"  id="btn-verive" data-id="${row.registration_id}"<i class="far fa-trash-alt"></i> Verified</button>`
+
+                             }
+
+                             return html
+                         }
+                     },
+                 ]
              })
 
-             swalWithBootstrapButtons.fire({
-                 title: 'Apakah anda ingin export data ini?',
-                 text: "Jika ya, mohon menunggu sebentar...",
-                 icon: 'warning',
-                 showCancelButton: true,
-                 confirmButtonText: 'Excel',
-                 cancelButtonText: 'PDF',
-                 reverseButtons: true
-             }).then((result) => {
-                 if (result.isConfirmed) {
-                     swalWithBootstrapButtons.fire(
-                         'Excel',
-                         'Data berhasil di download...',
-                         'success'
-                     )
-                 } else if (
-                     /* Read more about handling dismissals below */
-                     result.dismiss === Swal.DismissReason.cancel
-                 ) {
-                     swalWithBootstrapButtons.fire(
-                         'PDF',
-                         'Data berhasil di download...',
-                         'success'
-                     )
+         table.on('order.dt search.dt', function() {
+             table.column(0, {
+                 search: 'applied',
+                 order: 'applied'
+             }).nodes().each(function(cell, i) {
+                 cell.innerHTML = i + 1;
+             });
+         }).draw();
+
+         $(".dataTables_filter input")
+             .off()
+             .on('keyup change', function(e) {
+                 if (e.keyCode == 13 || this.value == "") {
+                     table.search(this.value)
+                         .draw();
                  }
-             })
-         })
-     })
+             });
 
-     $(function() {
-        $("#quartal").on('change',function(){
-            let val_quartal = $(this).val()
-            let html_harian;
-            let html_analisa;
-            let content = $("#content-laporan");
-            if(val_quartal == ""){
-                resetContent(content)
-            }
-            else {
-
-            html_harian = `
-                    
-                    <table class="table">
-            `
-            html_harian += `
-                    <tr>
-                        <td colspan="9"><h3>Data Harian</h3></td>
-                    </tr>
-                    <tr>
-                        <th style="width:30px">No</th>
-                        <th style="width:100px">Tanggal</th>
-                        <th style="width:100px">Quartal</th>
-                        <th style="width:100px">Nama Industri</th>
-                        <th style="width:100px">Nama Industri WWTP</th>
-                        <th style="width:100px">Nilai Ph</th>
-                        <th style="width:100px">Nilai COD</th>
-                        <th style="width:100px">Nilai Debit Air Limbah</th>
-                        <th style="width:100px">Nilai Debit Pemakaian Air</th>
-                    </tr>
-            `
-            for(let i=1; i<=31; i++){
-                html_harian += `
-                        <tr>
-                            <td>${i}</td>
-                            <td>2021-01-${i}</td>
-                            <td>Q1</td>
-                            <td>PT INDUSTRI A</td>
-                            <td>PT INDUSTRI A (WWTP-01)</td>
-                            <td>6</td>
-                            <td>3${i}</td>
-                            <td>100${i}</td>
-                            <td>100${i}</td>
-                        </tr>
-                `
-            }
-            html_harian += `</table>`
-
-            html_analisa = `
-                    
-                    <table class="table">
-            `
-            html_analisa += `
-                    <tr>
-                        <td colspan="8"><h3>Data Analisa</h3></td>
-                    </tr>
-                    <tr>
-                        <th style="width:30px">No</th>
-                        <th style="width:100px">Tanggal Pelaporan</th>
-                        <th style="width:100px">Quartal</th>
-                        <th style="width:100px">Nama Industri</th>
-                        <th style="width:100px">Nama Industri WWTP</th>
-                        <th style="width:100px">Lokasi Pengambilan</th>
-                        <th style="width:100px">Nomer Sampling</th>
-                        <th style="width:100px">Jenis Sampling</th>
-                        <th style="width:100px">Tanggal Sampling</th>
-                        <th style="width:100px">Tanggal Pengambilan</th>
-                        <th style="width:100px">Tanggal Diterima</th>
-                    </tr>
-            `
-            html_analisa += `
-                        <tr>
-                            <td>1</td>
-                            <td>2021-01-01</td>
-                            <td>Q1</td>
-                            <td>PT INDUSTRI A</td>
-                            <td>PT INDUSTRI A (WWTP-01)</td>
-                            <td>INLET</td>
-                            <td>31312213123</td>
-                            <td>Air Limbah Kawasan Industri</td>
-                            <td>2021-01-01 - 2021-02-25</td>
-                            <td>2021-01-01</td>
-                            <td>2021-01-01</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2021-02-01</td>
-                            <td>Q1</td>
-                            <td>PT INDUSTRI A</td>
-                            <td>PT INDUSTRI A (WWTP-01)</td>
-                            <td>OUTLET</td>
-                            <td>31312213123</td>
-                            <td>Air Limbah Kawasan Industri</td>
-                            <td>2021-01-01 - 2021-02-25</td>
-                            <td>2021-01-01</td>
-                            <td>2021-01-01</td>
-                        </tr>
-                `
-            html_analisa += `</table>`
-        }
-
-            content.html(html_harian)
-            content.append(html_analisa)
-
-        })
-        function resetContent(content){
-            content.html("")
-        }
-     })
+     }
  </script>
