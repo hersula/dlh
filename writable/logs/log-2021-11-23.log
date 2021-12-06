@@ -1,0 +1,105 @@
+CRITICAL - 2021-11-23 00:38:54 --> Too few arguments to function App\Models\LoggerDetailModel::_get_parameter(), 1 passed in /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/ValidasiPendaftaranControllers.php on line 364 and exactly 3 expected
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/ValidasiPendaftaranControllers.php(364): App\Models\LoggerDetailModel->_get_parameter()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\ValidasiPendaftaranControllers->validateRegisterWWTP()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2021-11-23 03:05:56 --> Too few arguments to function App\Models\LoggerDetailModel::_get_parameter(), 1 passed in /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/ValidasiPendaftaranControllers.php on line 364 and exactly 3 expected
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/ValidasiPendaftaranControllers.php(364): App\Models\LoggerDetailModel->_get_parameter()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\ValidasiPendaftaranControllers->validateRegisterWWTP()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2021-11-23 03:19:04 --> Too few arguments to function App\Models\LoggerDetailModel::_get_parameter(), 1 passed in /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Data_harian.php on line 232 and exactly 3 expected
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Data_harian.php(232): App\Models\LoggerDetailModel->_get_parameter()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Data_harian->add_data_harian()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2021-11-23 04:32:05 --> Trying to get property 'company_id' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Models/SiteWwtpModel.php(88): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Data_harian.php(25): App\Models\SiteWwtpModel->_find_all_site()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Data_harian->index()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2021-11-23 04:32:09 --> Trying to get property 'company_id' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Models/SiteWwtpModel.php(88): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Data_harian.php(25): App\Models\SiteWwtpModel->_find_all_site()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Data_harian->index()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2021-11-23 04:32:13 --> Trying to get property 'company_id' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Models/SiteWwtpModel.php(27): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/SiteWwtpControllers.php(65): App\Models\SiteWwtpModel->_get_users()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\SiteWwtpControllers->index()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2021-11-23 04:32:14 --> Trying to get property 'name' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/sidebar_v.php(32): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/wrapper_v.php(4): view()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#8 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/ValidasiPendaftaranControllers.php(49): view()
+#9 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\ValidasiPendaftaranControllers->index()
+#10 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#11 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#12 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2021-11-23 04:32:16 --> Trying to get property 'name' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/sidebar_v.php(32): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/wrapper_v.php(4): view()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#8 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Validasi_datalaporan.php(14): view()
+#9 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Validasi_datalaporan->index()
+#10 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#11 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#12 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2021-11-23 18:27:30 --> Trying to get property 'name' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/sidebar_v.php(32): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/wrapper_v.php(4): view()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#8 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Maps.php(14): view()
+#9 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Maps->index()
+#10 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#11 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#12 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}
+CRITICAL - 2021-11-23 18:36:35 --> Trying to get property 'name' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/sidebar_v.php(32): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/wrapper_v.php(4): view()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#8 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Maps.php(14): view()
+#9 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Maps->index()
+#10 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#11 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#12 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#13 {main}

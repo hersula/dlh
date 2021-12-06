@@ -1,0 +1,154 @@
+CRITICAL - 2021-11-21 02:33:39 --> Class 'App\Models\SiteDocumentModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:39:20 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:16 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:17 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:17 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:58 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:58 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:40:59 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:42:07 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:44:28 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:44:29 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:44:36 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:44:54 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:23 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:23 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:24 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:24 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:25 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:26 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:37 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:38 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:45:49 --> syntax error, unexpected ';', expecting identifier (T_STRING)
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Autoloader/Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Autoloader/Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace()
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass()
+#3 [internal function]: spl_autoload_call()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(767): class_exists()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(386): CodeIgniter\CodeIgniter->startController()
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2021-11-21 02:45:50 --> syntax error, unexpected ';', expecting identifier (T_STRING)
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Autoloader/Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Autoloader/Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace()
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass()
+#3 [internal function]: spl_autoload_call()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(767): class_exists()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(386): CodeIgniter\CodeIgniter->startController()
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2021-11-21 02:46:02 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:46:42 --> Namespace declaration statement has to be the very first statement or after any declare call in the script
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2021-11-21 02:46:51 --> Class 'App\Models\SiteDocumentModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:46:52 --> Class 'App\Models\SiteDocumentModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:46:53 --> Class 'App\Models\SiteDocumentModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:46:53 --> Class 'App\Models\SiteDocumentModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:47:32 --> Class 'App\Models\DetailSPaModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:47:33 --> Class 'App\Models\DetailSPaModel' not found
+#0 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(779): App\Controllers\admin\SiteWwtpControllers->__construct()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(390): CodeIgniter\CodeIgniter->createController()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2021-11-21 02:47:57 --> Undefined property: App\Controllers\admin\SiteWwtpControllers::$siteDocumentDB
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/SiteWwtpControllers.php(62): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\SiteWwtpControllers->index()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2021-11-21 02:48:21 --> Undefined variable: documents
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/pages/site_wwtp/index.php(651): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/content_v.php(4): view()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#6 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#7 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#8 /var/www/localhost/CodeIgniter4-4.0.2/app/Views/template/wrapper_v.php(5): view()
+#9 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(214): include('/var/www/localh...')
+#10 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/View/View.php(217): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#11 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/Common.php(1092): CodeIgniter\View\View->render()
+#12 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/admin/SiteWwtpControllers.php(68): view()
+#13 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\admin\SiteWwtpControllers->index()
+#14 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#15 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#16 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#17 {main}

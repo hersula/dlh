@@ -1,0 +1,8 @@
+CRITICAL - 2021-11-29 03:51:52 --> Trying to get property 'company_id' of non-object
+#0 /var/www/localhost/CodeIgniter4-4.0.2/app/Models/SiteWwtpModel.php(88): CodeIgniter\Debug\Exceptions->errorHandler()
+#1 /var/www/localhost/CodeIgniter4-4.0.2/app/Controllers/Data_harian.php(25): App\Models\SiteWwtpModel->_find_all_site()
+#2 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(802): App\Controllers\Data_harian->index()
+#3 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(399): CodeIgniter\CodeIgniter->runController()
+#4 /var/www/localhost/CodeIgniter4-4.0.2/vendor/codeigniter4/framework/system/CodeIgniter.php(317): CodeIgniter\CodeIgniter->handleRequest()
+#5 /var/www/localhost/CodeIgniter4-4.0.2/public/index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
