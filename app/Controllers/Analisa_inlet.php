@@ -402,4 +402,70 @@ class Analisa_inlet extends BaseController
         echo json_encode($result);
     }
 
+    public function get_data_inlet_laporan()
+    {
+        $wwtpID = $this->request->getPost('wwtpID');
+        $tipe_semester = $this->request->getPost('tipe_semester');
+        $start_tgl = convertDate($this->request->getPost('start_tgl'));
+        $end_tgl = convertDate($this->request->getPost('end_tgl'));
+
+        if($tipe_semester == 2){
+            $db      = \Config\Database::connect();
+
+            // GET COLUMN PARAMETER WWTP
+            $sql_column = "SELECT logger_detail.parameter FROM logger_detail JOIN logger ON logger.loggerID = logger_detail.loggerID JOIN master_parameter ON master_parameter.parameterID = logger_detail.parameterID WHERE logger.siteWWTPID = ? AND logger_detail.parameter_asal = ? AND master_parameter.harian >= ?";
+            $column = $db->query($sql_column,[$wwtpID,'BMAL',0])->getResultArray();
+
+            $rcolumn = array_map_assoc($column);
+
+       
+
+            
+            // DATA
+            $builder = $db->table("inlet_dt");
+            $builder->select("inlet_hd.tgl_pelaporan,inlet_dt.parameter,inlet_dt.nilai")
+            ->join('inlet_hd','inlet_hd.inlet_id =inlet_dt.inlet_id')
+            ->where('inlet_hd.siteWWTPID',$wwtpID)
+            ->where('inlet_hd.tgl_pelaporan >=',$start_tgl)
+            ->where('inlet_hd.tgl_pelaporan <=',$end_tgl);
+            $result = $builder->get()->getResultArray();
+
+            $newData =[];
+
+
+            for($i=0; $i < count($result); $i++){
+                for($j=0; $j< count($column); $j++){
+                    if($result[$i]['parameter']==$column[$j]['parameter']){
+                        $newData[$i] = [$column[$j]['parameter']=>$result[$i]['nilai']];
+                    }
+                }
+            }
+            // foreach($result as $rs){
+            //     foreach($column as $cl){
+            //         if($rs['parameter']==$cl['parameter']){
+            //             $newData[] = [$cl['parameter']=>$rs['nilai'],'tgl_pelaporan'=>$rs['tgl_pelaporan']];
+            //         }
+            //     }
+            // }
+            $myColums = [];
+            foreach($column as $cl){
+                $myColums[] = ['data'=> $cl['parameter'], 'title'=> $cl['parameter']];
+            }
+            $myColums[] = ['data'=> 'tgl_pelaporan', 'title'=> 'tgl_pelaporan'];
+            $datas = [
+                'data'=> $newData,
+                'columns' =>$myColums
+            ];
+            
+
+            echo json_encode($datas);
+
+        }
+        else {
+            echo "belum tersedia";
+        }
+       
+    }
+
+
 }

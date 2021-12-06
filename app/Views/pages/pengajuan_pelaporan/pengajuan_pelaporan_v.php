@@ -88,7 +88,7 @@
                                      <?php
                                         foreach ($site as $row) {
                                         ?>
-                                         <option value="<?= $row["siteWWTPID"]; ?>"><?= $row["name"]; ?></option>
+                                         <option value="<?= $row["siteWWTPID"]; ?>" data-name="<?= $row['name']?>"><?= $row["name"]; ?></option>
                                      <?php
                                         }
                                         ?>
@@ -163,7 +163,7 @@
                      </div>
                      <div class="d-flex flex-row-reverse bd-highlight">
                          <div class="p-2 pr-4 bd-highlight">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalTambahPengajuan">Tambah Pengajuan Pelaporan</button>
+                            <button class="btn btn-primary" id="tambah-laporan">Tambah Pengajuan Pelaporan</button>
                             <button class="btn btn-warning" id="btn-download">Download</button>
                          </div>
                      </div>
@@ -174,7 +174,6 @@
                                      <th>No</th>
                                      <th>Quartal Periode </th>
                                      <th>Tanggal Pelaporan</th>
-                                     <th>Nama Industri</th>
                                      <th>Nama Industri WWTP</th>
                                      <th>Status</th>
                                      <th>Aksi</th>
@@ -208,101 +207,7 @@
      </div>
  </div>
 
- <!-- Modal -->
- <div class="modal fade" id="modalDownstream" tabindex="-1" role="dialog" aria-labelledby="modalDownstreamLabel" aria-hidden="true">
-     <div class="modal-dialog modal-lg" role="document">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title" id="modalDownstreamLabel">Hasil Analisa Pelaporan Downstream</h5>
-                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                 </button>
-             </div>
-             <div class="modal-body">
-                 <div class="row">
-                     <table class="table">
-                         <tr>
-                             <th class="w-30">Nama Penanggung Jawab</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Nama Industri</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Alamat Industri</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Nama Laboratorium</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Nomer Akreditasi Lab</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Nomer Sampling</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Jenis Sampling</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Tanggal Sampling</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Tanggal Hasil</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Titik Koordinat</th>
-                             <th style="width:10px">:</th>
-                             <td>Xxxxx</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Hasil Analisa</th>
-                             <th style="width:10px">:</th>
-                             <td><button class=" btn-primary" style="border-color: darkgreen;">Download File</button></td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Tanggal Pelaporan</th>
-                             <th style="width:10px">:</th>
-                             <td>2021-08-20 11:20:00</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Quartal</th>
-                             <th style="width:10px">:</th>
-                             <td>1</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Divalidasi Oleh</th>
-                             <th style="width:10px">:</th>
-                             <td>Admin DLH Kabupaten Bekasi</td>
-                         </tr>
-                         <tr>
-                             <th class="w-30">Tanggal Divalidasi </th>
-                             <th style="width:10px">:</th>
-                             <td>2021-08-20 11:20:00</td>
-                         </tr>
-                     </table>
-                 </div>
-             </div>
-
-         </div>
-     </div>
- </div>
+ 
  <!-- MODAL TAMBAH Pengajuan Laporan -->
  <div class="modal fade" id="modalTambahPengajuan" tabindex="-1" role="dialog" aria-labelledby="modalTambahPengajuanLabel" aria-hidden="true">
      <div class="modal-dialog modal-lg" role="document">
@@ -316,14 +221,8 @@
              <div class="modal-body">
                  <div class="table-responsive">
                      <div class="row">
-                         <div class="col-lg-6">
-                             <select name="" id="" class="form-control">
-                                 <option value="">Pilih Industri</option>
-
-                             </select>
-                         </div>
-                         <div class="col-lg-6">
-                             <select name="" id="" class="form-control">
+                         <div class="col-lg-12">
+                             <select name="site_wwtp" id="site_wwtp" class="form-control" readonly>
                                  <option value="">Pilih Site WWTP</option>
                              </select>
                          </div>
@@ -332,17 +231,21 @@
                      <form>
                          <table class="table">
                              <tr>
-                                 <td style="width:30px"><label for="nama_perusahaan" class="text-left">Nama Perusahaan </label></td>
-                                 <td><input type="text" class="form-control" placeholder="Nama Perusahaan" id="nama_perusahaan" name="nama_perusahaan" required readonly></td>
+                                 <td style="width:30px"><label for="tipe_pelaporan" class="text-left">Tipe Pelaporan </label></td>
+                                 <td>
+                                 <select  class="form-control" id="tipe_pelaporan" name="tipe_pelaporan" required readonly >
+                                    <option value="">Pilih Tipe Pelaporan</option>
+                                    <option value="2" selected>Semester</option>
+                                </select>
+                                 </td>
                              </tr>
                              <tr>
-                                 <td style="width:30px"><label for="nama_perusahaan" class="text-left">Quartal </label></td>
+                                 <td style="width:30px"><label for="nama_perusahaan" class="text-left">Semester Yang Dilaporkan </label></td>
                                  <td>
-                                 <select  class="form-control" id="quartal" name="quartal" required >
-                                    <option value="">Pilih QUARTAL</option>
-                                    <option value="Quartal 1">Quartal 1</option>
-                                    <option value="Quartal 2">Quartal 2</option>
-                                    <option value="Quartal 3">Quartal 3</option>
+                                 <select  class="form-control" id="semester_pelaporan" name="semester_pelaporan" required readonly>
+                                    <option value="">Pilih Tipe Pelaporan</option>
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
                                 </select>
                                  </td>
                              </tr>
@@ -351,12 +254,28 @@
                                  <td>
                                      <div class="row">
                                     <div class="custom-control custom-checkbox col-lg-auto">
-                                        <input type="checkbox" class="custom-control-input" id="data_harian" name="data_harian">
-                                        <label class="custom-control-label" for="data_harian">Data Harian</label>
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_harian" name="data_harian">
+                                        <label class="custom-control-label" for="opt_data_harian">Data Harian</label>
                                     </div>
                                     <div class="custom-control custom-checkbox col-lg-auto">
-                                        <input type="checkbox" class="custom-control-input" id="data_analisa" name="data_analisa">
-                                        <label class="custom-control-label" for="data_analisa">Data Analisa</label>
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_analisa_inlet" name="data_analisa_inlet">
+                                        <label class="custom-control-label" for="opt_data_analisa_inlet">Data Analisa Inlet</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-lg-auto">
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_analisa_outlet" name="data_analisa_outlet">
+                                        <label class="custom-control-label" for="opt_data_analisa_outlet">Data Analisa outlet</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-lg-auto">
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_analisa_outfall" name="data_analisa_outfall">
+                                        <label class="custom-control-label" for="opt_data_analisa_outfall">Data Analisa outfall</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-lg-auto">
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_analisa_upstream" name="data_analisa_upstream">
+                                        <label class="custom-control-label" for="opt_data_analisa_upstream">Data Analisa upstream</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox col-lg-auto">
+                                        <input type="checkbox" class="custom-control-input" id="opt_data_analisa_downstream" name="data_analisa_downstream">
+                                        <label class="custom-control-label" for="opt_data_analisa_downstream">Data Analisa downstream</label>
                                     </div>
                                     </div>
                                  </td>
@@ -377,13 +296,21 @@
                                  </td>
                              </tr>
                          </table>
+                         <div id="content-laporan">
+                             <h1>Data Harian</h1>
+                             <table id="tbl_harian" class="table">
+                             </table>
+                             <!-- <h1>Data Analisa Inlet</h1>
+                             <table id="tbl_analisa_inlet" class="table">
+                             </table> -->
+                         </div>
                          <table class="table">
                              <tr>
                                  <td colspan="3"><button class="btn btn-primary float-right" type="submit">Submit</button></td>
                              </tr>
                          </table>
                         </form>
-                         <div id="content-laporan"></div>
+                        
                         
                  </div>
              </div>
@@ -392,6 +319,8 @@
  </div>
  
  <script>
+
+
 
 $("#kecamatan").on('change', function() {
          let kecamatanID = $(this).val();
@@ -443,8 +372,12 @@ $("#kecamatan").on('change', function() {
              });
          }
      });
+     $("#site").on('change',function(){
+        let id = $(this).val();
+        myDataTable(id)
 
-     function myDataTable(){
+     })
+     function myDataTable(id_site){
          let html;
          let table =
              $("#datatable").DataTable({
@@ -473,15 +406,14 @@ $("#kecamatan").on('change', function() {
                  "bInfo": true,
                  "processing": true,
                  "bServerSide": true,
+                 "bDestroy": true,
                  "order": [
                      [1, "asc"]
                  ],
                  "ajax": {
                      url: "<?= base_url('Pengajuan_pelaporan/getDataTable') ?>",
                      type: "POST",
-                     data: function(d) {
-                         //  d._token = "{{csrf_token()}}"
-                     },
+                     data:{site_id:id_site}
 
                  },
                  columns: [{
@@ -492,33 +424,26 @@ $("#kecamatan").on('change', function() {
                          }
                      },
                      {
-                         data: "company_name",
-                         render: $.fn.dataTable.render.text()
+                         "render": function(data, type, row, meta) {
+                             let html ="";
+                             if(row.tipe_pelaporan == 1 ){
+                                 html = `Triwulan`
+                             }
+                             else if(row.tipe_pelaporan == 2 ){
+                                 html = `Semester`
+                             }
+                             return html
+                         }
                      },
                      {
-                         data: "company_address",
-                         render: $.fn.dataTable.render.text()
-                     },
-                     {
-                         data: "company_phone",
-                         render: $.fn.dataTable.render.text()
-                     },
-                     {
-                         data: "email",
+                         data: "crt_at",
                          render: $.fn.dataTable.render.text()
                      },
                      {
                          data: "name",
                          render: $.fn.dataTable.render.text()
                      },
-                     {
-                         data: "position",
-                         render: $.fn.dataTable.render.text()
-                     },
-                     {
-                         data: "crt_at",
-                         render: $.fn.dataTable.render.text()
-                     },
+                     
                      {
                          "render": function(data, type, row, meta) {
                              return html = `<div class='badge badge-${row.badge}'>${row.status}</div>`
@@ -543,23 +468,156 @@ $("#kecamatan").on('change', function() {
                  ]
              })
 
-         table.on('order.dt search.dt', function() {
-             table.column(0, {
-                 search: 'applied',
-                 order: 'applied'
-             }).nodes().each(function(cell, i) {
-                 cell.innerHTML = i + 1;
-             });
-         }).draw();
-
-         $(".dataTables_filter input")
-             .off()
-             .on('keyup change', function(e) {
-                 if (e.keyCode == 13 || this.value == "") {
-                     table.search(this.value)
-                         .draw();
-                 }
-             });
-
      }
+
+     $("#tambah-laporan").click(function() {
+             let siteWWTPID = $("select[name=export_site]").val();
+             let nameWWTP = $("select[name=export_site]").find(':selected').attr('data-name');
+             if (siteWWTPID != '') {
+                 $("#site_wwtp").html(`<option value="${siteWWTPID}">${nameWWTP}</option>`)
+                 $("#modalTambahPengajuan").modal("show");
+             } else {
+                 notify("Pilih Titik Penaatan Terlebih dahulu!", 'danger', 'top', 'center');
+             }
+    });
+
+
+    // DATA HARIAN
+    $("#opt_data_harian").on('change',function(){
+        let wwtpID = $("select[name=export_site]").val();
+        let tipe_semester = $("#tipe_pelaporan").val();
+        let semester = $("#semester_pelaporan").val();
+        let start_tgl;
+        let end_tgl;
+        // SEMESTER
+        let start_month = moment().startOf('years').format('DD-MM-YYYY');
+        let end_month = moment(start_month).add(5, 'M').endOf('months').format('DD-MM-YYYY');
+
+        if(moment().format('MM') == 1 || moment().format('MM') == 2 || moment().format('MM') == 3 || moment().format('MM') == 4 || moment().format('MM') == 5 || moment().format('MM') == 6){
+            start_tgl = start_month
+            end_tgl = end_month
+
+            $("#semester_pelaporan").html(`<option value="1">Semester 1</option>`)
+        }
+        else {
+            start_tgl   = moment(end_month,"DD-MM-YYYY").add(1,'M').startOf('months').format('DD-MM-YYYY');
+            end_tgl     = moment(start_tgl,"DD-MM-YYYY").add(5, 'M').endOf('months').format('DD-MM-YYYY');
+            $("#semester_pelaporan").html(`<option value="2">Semester 2</option>`)
+        }
+        
+
+        if($(this).is(":checked")) { 
+            let  tableName= '#tbl_harian';
+            $.ajax({
+                url: '<?= base_url('Data_harian/get_data_harian_laporan')?>',
+                type: 'POST',
+                data: { wwtpID:wwtpID,tipe_semester:tipe_semester,start_tgl:start_tgl,end_tgl:end_tgl },
+                success:function(data){
+                    d =  JSON.parse(data);
+                    $('#tbl_harian').DataTable({
+                        "bDestroy": true,
+                        data: d.data,
+                        columns: d.columns
+                    });
+                   
+                    
+                }
+            });
+        }
+        else {
+            $('#tbl_harian').DataTable().clear().draw();
+        }
+    })
+    // DATA INLET
+    $("#opt_data_analisa_inlet").on('change',function(){
+        let wwtpID = $("select[name=export_site]").val();
+        let tipe_semester = $("#tipe_pelaporan").val();
+        let semester = $("#semester_pelaporan").val();
+        let start_tgl;
+        let end_tgl;
+        // SEMESTER
+        let start_month = moment().startOf('years').format('DD-MM-YYYY');
+        let end_month = moment(start_month).add(5, 'M').endOf('months').format('DD-MM-YYYY');
+
+        if(moment().format('MM') == 1 || moment().format('MM') == 2 || moment().format('MM') == 3 || moment().format('MM') == 4 || moment().format('MM') == 5 || moment().format('MM') == 6){
+            start_tgl = start_month
+            end_tgl = end_month
+
+            $("#semester_pelaporan").html(`<option value="1">Semester 1</option>`)
+        }
+        else {
+            start_tgl   = moment(end_month,"DD-MM-YYYY").add(1,'M').startOf('months').format('DD-MM-YYYY');
+            end_tgl     = moment(start_tgl,"DD-MM-YYYY").add(5, 'M').endOf('months').format('DD-MM-YYYY');
+            $("#semester_pelaporan").html(`<option value="2">Semester 2</option>`)
+        }
+        
+
+        if($(this).is(":checked")) { 
+            let  tableName= '#tbl_analisa_inlet';
+            // $.ajax({
+            //     url: '<?= base_url('Analisa_inlet/get_data_inlet_laporan')?>',
+            //     type: 'POST',
+            //     data: { wwtpID:wwtpID,tipe_semester:tipe_semester,start_tgl:start_tgl,end_tgl:end_tgl },
+            //     success:function(data){
+            //         d =  JSON.parse(data);
+            //         $('#tbl_analisa_inlet').DataTable({
+            //             "bDestroy": true,
+            //             data: d.data,
+            //             columns: d.columns
+            //         });
+                   
+                    
+            //     }
+            // });
+        }
+        else {
+            $('#tbl_analisa_inlet').DataTable().clear().draw();
+        }
+    })
+    // DATA OUTET
+    $("#opt_data_analisa_outlet").on('change',function(){
+        let wwtpID = $("select[name=export_site]").val();
+        let tipe_semester = $("#tipe_pelaporan").val();
+        let semester = $("#semester_pelaporan").val();
+        let start_tgl;
+        let end_tgl;
+        // SEMESTER
+        let start_month = moment().startOf('years').format('DD-MM-YYYY');
+        let end_month = moment(start_month).add(5, 'M').endOf('months').format('DD-MM-YYYY');
+
+        if(moment().format('MM') == 1 || moment().format('MM') == 2 || moment().format('MM') == 3 || moment().format('MM') == 4 || moment().format('MM') == 5 || moment().format('MM') == 6){
+            start_tgl = start_month
+            end_tgl = end_month
+
+            $("#semester_pelaporan").html(`<option value="1">Semester 1</option>`)
+        }
+        else {
+            start_tgl   = moment(end_month,"DD-MM-YYYY").add(1,'M').startOf('months').format('DD-MM-YYYY');
+            end_tgl     = moment(start_tgl,"DD-MM-YYYY").add(5, 'M').endOf('months').format('DD-MM-YYYY');
+            $("#semester_pelaporan").html(`<option value="2">Semester 2</option>`)
+        }
+        
+
+        if($(this).is(":checked")) { 
+            let  tableName= '#tbl_analisa_outlet';
+            // $.ajax({
+            //     url: '<?= base_url('Analisa_outlet/get_data_outlet_laporan')?>',
+            //     type: 'POST',
+            //     data: { wwtpID:wwtpID,tipe_semester:tipe_semester,start_tgl:start_tgl,end_tgl:end_tgl },
+            //     success:function(data){
+            //         d =  JSON.parse(data);
+            //         $('#tbl_analisa_outlet').DataTable({
+            //             "bDestroy": true,
+            //             data: d.data,
+            //             columns: d.columns
+            //         });
+                   
+                    
+            //     }
+            // });
+        }
+        else {
+            $('#tbl_analisa_outlet').DataTable().clear().draw();
+        }
+    })
  </script>

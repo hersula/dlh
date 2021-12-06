@@ -19,3 +19,13 @@ function convertDatetime($date)
 {
     return date('Y-m-d h:m:s', strtotime($date));
 }
+
+function array_map_assoc($arr){
+    $str = "";
+    for($i=0;$i<count($arr);$i++)
+    {
+        $str .= implode(":",$arr[$i]).', ';
+    }
+
+    return $str;
+  }

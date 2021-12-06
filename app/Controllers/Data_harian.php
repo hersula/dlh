@@ -325,4 +325,45 @@ class Data_harian extends BaseController
 
         echo json_encode($result->getResultArray());
     }
+
+    public function get_data_harian_laporan()
+    {
+        $wwtpID = $this->request->getPost('wwtpID');
+        $tipe_semester = $this->request->getPost('tipe_semester');
+        $start_tgl = convertDate($this->request->getPost('start_tgl'));
+        $end_tgl = convertDate($this->request->getPost('end_tgl'));
+
+        if($tipe_semester == 2){
+            $db      = \Config\Database::connect();
+
+            // GET COLUMN PARAMETER WWTP
+            $sql_column = "SELECT logger_detail.parameter FROM logger_detail JOIN logger ON logger.loggerID = logger_detail.loggerID JOIN master_parameter ON master_parameter.parameterID = logger_detail.parameterID WHERE logger.siteWWTPID = ? AND logger_detail.parameter_asal = ? AND master_parameter.harian >= ?";
+            $column = $db->query($sql_column,[$wwtpID,'BMAL',1])->getResultArray();
+
+            $rcolumn = array_map_assoc($column);
+            
+            // DATA
+            $builder = $db->table("daily_data_$wwtpID");
+            $builder->select("$rcolumn,tgl_pelaporan")->where('tgl_pelaporan >=',$start_tgl)->where('tgl_pelaporan <=',$end_tgl);
+            $result = $builder->get()->getResultArray();
+
+            $myColums = [];
+            foreach($column as $cl){
+                $myColums[] = ['data'=> $cl['parameter'], 'title'=> $cl['parameter']];
+            }
+            $myColums[] = ['data'=> 'tgl_pelaporan', 'title'=> 'tgl_pelaporan'];
+            $datas = [
+                'data'=> $result,
+                'columns' =>$myColums
+            ];
+            
+
+            echo json_encode($datas);
+
+        }
+        else {
+            echo "belum tersedia";
+        }
+       
+    }
 }

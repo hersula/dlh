@@ -41,21 +41,21 @@ class Pengajuan_pelaporan extends BaseController
 
     public function getDataTable(){
         $columns     = [
-            'siteWWTPID ',
-            'company_name',
-            'name',
-            'address',
-            'geolocation',
+            'name ',
+            'tipe_pelaporan',
+            'status',
+            'crt_at',
         ];
 
         if ($this->request->isAJAX()) {
             $db = \Config\Database::connect();
 
+            $site_id = $this->request->getPost("site_id");
             $data       = array();
             $orderBy    = $columns[$this->request->getPost('order[0][column]')];
             $skip       = $this->request->getPost('start');
             $limit      = $this->request->getPost('length');
-            $query      = $db->query("SELECT tbl1.siteWWTPID, tbl2.company_name, tbl1.name, tbl1.address, CONCAT(tbl1.longitude_outfall, ',', tbl1.latitude_outfall) as geolocation, tbl1.status FROM site_wwtp as tbl1 INNER JOIN company as tbl2 on tbl1.companyID = tbl2.company_id WHERE tbl1.companyID = '" . user()->company_id . "'   limit $skip, $limit  ");
+            $query      = $db->query("SELECT site_wwtp.name, tipe_pelaporan,report_hd.status,report_hd.crt_at FROM report_hd JOIN site_wwtp ON site_wwtp.siteWWTPID = report_hd.siteWWTPID WHERE report_hd.siteWWTPID = '$site_id' limit $skip, $limit  ");
             $rows       = $query->getResultArray();
 
             foreach ($rows as $key => $value) {
@@ -66,17 +66,15 @@ class Pengajuan_pelaporan extends BaseController
                 }
 
                 $data[] = [
-                    'siteWWTPID'    => $value['siteWWTPID'],
-                    'company_name'  => $value['company_name'],
-                    'name'          => $value['name'],
-                    'address'       => $value['address'],
-                    'geolocation'   => $value['geolocation'],
-                    'status'        => $value['status'],
-                    'badge'         => $badge,
+                    'name'              => $value['name'],
+                    'tipe_pelaporan'    => $value['tipe_pelaporan'],
+                    'status'              => $value['status'],
+                    'crt_at'           => $value['crt_at'],
+                    'badge'             => $badge,
                 ];
             }
 
-            $query  = $db->query("SELECT count(*) as jml FROM site_wwtp as tbl1 INNER JOIN company as tbl2 on tbl1.companyID = tbl2.company_id ");
+            $query  = $db->query("SELECT count(*) as jml FROM report_hd WHERE  report_hd.siteWWTPID = '$site_id'");
             $count  = $query->getRowArray();
 
             return json_encode([
@@ -88,7 +86,4 @@ class Pengajuan_pelaporan extends BaseController
             $db->close();
         }
     }
-
-
-
 }

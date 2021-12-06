@@ -47,6 +47,7 @@
   <script src="<?= base_url('')?>/assets/vendor/bootstrap-datetimepicker.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
   
 </head>
 
